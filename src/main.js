@@ -4,17 +4,18 @@ import { tileTypeAtPixel } from "./game/collision.js";
 import { createPlayer, updatePlayer, playerCenter, setPlayerColor } from "./entities/player.js";
 import { createNpc, findNearestNpc } from "./entities/npc.js";
 import { createItem, findCollectableItemAt, isItemRevealed } from "./entities/item.js";
-import { createLantern, isNearLantern } from "./entities/lantern.js";
+import { createDeliveryPoint, isNearDeliveryPoint } from "./entities/deliveryPoint.js";
 import { createPortal, isNearPortal } from "./entities/portal.js";
 import { loadSave, writeSave, resetSave } from "./systems/save.js";
 import { openDialogue, closeDialogue, isDialogueOpen } from "./systems/dialogue.js";
 import { showIntro, isIntroOpen } from "./systems/intro.js";
-import { showWorldSelect, closeWorldSelect, isWorldSelectOpen } from "./systems/worldSelect.js";
+import { showWorldSelect, isWorldSelectOpen } from "./systems/worldSelect.js";
 import { initInventoryUI } from "./systems/inventory.js";
 import { createEventTracker, checkTileEvents } from "./systems/events.js";
 import { drawTilemap } from "./render/tilemap.js";
 import { drawTroyAtmosphere } from "./render/atmosphere.js";
-import { drawPlayer, drawNpc, drawItem, drawLantern, drawPortal } from "./render/sprites.js";
+import { drawUwmDecor, drawAnnArborDecor } from "./render/townDecor.js";
+import { drawPlayer, drawNpc, drawItem, drawLantern, drawVault, drawBigM, drawPortal } from "./render/sprites.js";
 import { drawInteractHint, createFxManager } from "./render/ui.js";
 import {
   initAudio,
@@ -29,55 +30,83 @@ import {
 
 const canvas = document.getElementById("game-canvas");
 const ctx = canvas.getContext("2d");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const LANTERN_IDLE_TEXT = "An old iron lantern stands at the crossroads, its flame unlit and waiting.";
-const LANTERN_CALM_TEXT =
-  "The lantern burns steady and warm. The travelers are home — and something new glimmers at the crossroads.";
-const EPILOGUE_TEXT =
-  "As the last treasure settles into the lantern's flame, it flares bright gold — and beside it, the air itself begins to fold, a shimmering portal blinking open at the crossroads. Kiri, Sable, Wren, and Mochi each pause to look back at you, one last time, before their night finally comes to an end. Something tells you this crossroads isn't finished with you yet.";
-const PORTAL_LOCKED_PREFIX = "The portal shimmers and settles on a path. Somewhere beyond it,";
+const DELIVERY_DRAWERS = { lantern: drawLantern, vault: drawVault, bigm: drawBigM };
+const TILE_SIZE = 40;
+const SHAKE_DURATION_MS = 700;
+const WORLD_SWITCH_DELAY_MS = 2600;
 
 async function loadJson(path) {
   const response = await fetch(path);
   return response.json();
 }
 
+function fillTemplate(template, values) {
+  return template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+}
+
 async function boot() {
-  const [map, npcsData, itemsData, customization, worlds] = await Promise.all([
-    loadJson("/src/data/map.json"),
-    loadJson("/src/data/npcs.json"),
-    loadJson("/src/data/items.json"),
-    loadJson("/src/data/customization.json"),
+  const [worlds, customization] = await Promise.all([
     loadJson("/src/data/worlds.json"),
+    loadJson("/src/data/customization.json"),
   ]);
+
+  const save = loadSave(customization);
+  const world = worlds.find((w) => w.id === save.currentWorld) || worlds[0];
+  const worldState = save.worlds[world.id];
+
+  const [map, npcsData, itemsData] = await Promise.all([
+    loadJson(`/src/data/${world.dataDir}/map.json`),
+    loadJson(`/src/data/${world.dataDir}/npcs.json`),
+    loadJson(`/src/data/${world.dataDir}/items.json`),
+  ]);
+
+  canvas.width = world.cols * TILE_SIZE;
+  canvas.height = world.rows * TILE_SIZE;
+  canvas.style.aspectRatio = `${canvas.width} / ${canvas.height}`;
 
   const npcs = npcsData.map(createNpc);
   const items = itemsData.map(createItem);
-  const save = loadSave(customization);
-  const lantern = createLantern({ row: 5, col: 9 });
-  const portal = createPortal({ row: 4, col: 9 });
+  const deliveryPoint = createDeliveryPoint(world.deliveryPoint);
+  const portal = createPortal(world.portalPoint);
+  const drawDeliveryPoint = DELIVERY_DRAWERS[world.deliveryKind];
 
-  const player = createPlayer({ row: 6, col: 9, color: save.playerColor });
+  const player = createPlayer({ row: world.playerStart.row, col: world.playerStart.col, color: save.playerColor });
   const eventTracker = createEventTracker();
   const fx = createFxManager();
   let footstepTimer = 0;
+  let shakeTimeLeft = 0;
   const FOOTSTEP_INTERVAL_MS = 230;
 
   initAudio();
   setMuted(save.muted);
 
   npcs.forEach((npc) => {
-    npc.talked = save.talkedNpcIds.includes(npc.id);
+    npc.talked = worldState.talkedNpcIds.includes(npc.id);
   });
 
   function talkedIdSet() {
-    return new Set(save.talkedNpcIds);
+    return new Set(worldState.talkedNpcIds);
   }
   function foundIdSet() {
-    return new Set(save.foundItemIds);
+    return new Set(worldState.foundItemIds);
   }
   function isDelivered(itemId) {
-    return save.deliveredItemIds.includes(itemId);
+    return worldState.deliveredItemIds.includes(itemId);
+  }
+  function inventoryView() {
+    return {
+      talkedNpcIds: worldState.talkedNpcIds,
+      foundItemIds: worldState.foundItemIds,
+      deliveredItemIds: worldState.deliveredItemIds,
+      muted: save.muted,
+      playerColor: save.playerColor,
+      // the secret cosmetic unlocks once the player has moved past Troy at
+      // least once, not just on the current world's own epilogue flag —
+      // otherwise it would flicker on/off depending on which world you're in
+      epilogueSeen: save.unlockedWorlds.length > 1,
+    };
   }
 
   const inventoryUI = initInventoryUI({
@@ -88,41 +117,35 @@ async function boot() {
       save.playerColor = hex;
       setPlayerColor(player, hex);
       writeSave(save);
-      inventoryUI.render(save);
+      inventoryUI.render(inventoryView());
     },
     onReset() {
-      const fresh = resetSave(customization, save.muted);
-      Object.assign(save, fresh);
-      npcs.forEach((npc) => {
-        npc.talked = false;
-      });
-      setPlayerColor(player, save.playerColor);
-      closeDialogue();
-      inventoryUI.render(save);
+      resetSave(customization, save.muted);
+      window.location.reload();
     },
     onMuteToggle() {
       save.muted = !save.muted;
       setMuted(save.muted);
       writeSave(save);
-      inventoryUI.render(save);
+      inventoryUI.render(inventoryView());
     },
   });
 
-  inventoryUI.render(save);
+  inventoryUI.render(inventoryView());
   initInput();
 
-  if (!save.hasSeenIntro) {
-    showIntro(() => {
-      save.hasSeenIntro = true;
+  if (!worldState.hasSeenIntro) {
+    showIntro(world.introTitle, world.introParagraphs, world.id === "troy" ? "Begin the Night" : "Begin", () => {
+      worldState.hasSeenIntro = true;
       writeSave(save);
     });
   }
 
   function npcDialogueLine(npc) {
     const linkedItem = items.find((item) => item.id === npc.linkedItemId);
-    const allDelivered = save.deliveredItemIds.length === items.length;
+    const allDelivered = worldState.deliveredItemIds.length === items.length;
     const delivered = isDelivered(linkedItem.id);
-    const found = save.foundItemIds.includes(linkedItem.id);
+    const found = worldState.foundItemIds.includes(linkedItem.id);
 
     if (allDelivered) return npc.dialogue.farewell;
     if (delivered) return npc.dialogue.thanks;
@@ -130,62 +153,63 @@ async function boot() {
     return npc.dialogue.intro;
   }
 
-  function handleLanternInteract() {
-    const undelivered = save.foundItemIds.filter((id) => !isDelivered(id));
+  function handleDeliveryInteract() {
+    const undelivered = worldState.foundItemIds.filter((id) => !isDelivered(id));
 
     if (undelivered.length > 0) {
       const names = undelivered.map((id) => items.find((item) => item.id === id).name);
-      save.deliveredItemIds.push(...undelivered);
+      worldState.deliveredItemIds.push(...undelivered);
       writeSave(save);
-      inventoryUI.render(save);
-      fx.trigger("sparkle", lantern.x + 20, lantern.y + 10);
+      inventoryUI.render(inventoryView());
+      fx.trigger("sparkle", deliveryPoint.x + 20, deliveryPoint.y + 10);
 
-      if (save.deliveredItemIds.length === items.length) {
-        save.epilogueSeen = true;
+      if (worldState.deliveredItemIds.length === items.length) {
+        worldState.epilogueSeen = true;
         writeSave(save);
         playCelebrationFanfare();
-        [-24, -8, 8, 24].forEach((dx) => fx.trigger("confetti", lantern.x + 20 + dx, lantern.y));
+        shakeTimeLeft = SHAKE_DURATION_MS;
+        [-24, -8, 8, 24].forEach((dx) => fx.trigger("confetti", deliveryPoint.x + 20 + dx, deliveryPoint.y));
         fx.trigger("sparkle", portal.x + 20, portal.y + 20);
-        openDialogue("The Crossroads", EPILOGUE_TEXT);
+        openDialogue(world.name, world.epilogueText);
       } else {
         playPickupChime();
-        openDialogue("The Lantern", `You feed the ${names.join(" and ")} to the flame. It burns a little brighter.`);
+        openDialogue(world.deliveryLabel, `You leave the ${names.join(" and ")} here. It responds — just a little.`);
       }
       return;
     }
 
-    if (save.epilogueSeen) {
-      openDialogue("The Lantern", LANTERN_CALM_TEXT);
-    } else if (save.deliveredItemIds.length > 0) {
+    if (worldState.epilogueSeen) {
+      openDialogue(world.deliveryLabel, world.calmText);
+    } else if (worldState.deliveredItemIds.length > 0) {
       openDialogue(
-        "The Lantern",
-        `The lantern's flame flickers gently. ${save.deliveredItemIds.length} of ${items.length} travelers are on their way home.`
+        world.deliveryLabel,
+        fillTemplate(world.progressTextTemplate, { delivered: worldState.deliveredItemIds.length, total: items.length })
       );
     } else {
-      openDialogue("The Lantern", LANTERN_IDLE_TEXT);
+      openDialogue(world.deliveryLabel, world.idleText);
     }
   }
 
   function handlePortalInteract() {
-    if (save.unlockedWorld) {
-      const world = worlds.find((w) => w.id === save.unlockedWorld);
+    const lockedWorlds = worlds.filter((w) => !save.unlockedWorlds.includes(w.id));
+
+    if (lockedWorlds.length === 0) {
       openDialogue(
         "The Portal",
-        `${PORTAL_LOCKED_PREFIX} ${world.name} awaits — though the way there is still being built. Come back soon.`
+        "The portal shimmers but holds still — you've already walked every path the crossroads had to show you."
       );
       return;
     }
 
-    showWorldSelect(worlds, (worldId) => {
-      save.unlockedWorld = worldId;
+    showWorldSelect(lockedWorlds, (worldId) => {
+      save.unlockedWorlds.push(worldId);
+      save.currentWorld = worldId;
       writeSave(save);
-      const world = worlds.find((w) => w.id === worldId);
+      const chosen = worlds.find((w) => w.id === worldId);
       fx.trigger("sparkle", portal.x + 20, portal.y + 20);
       playPickupChime();
-      openDialogue(
-        "The Portal",
-        `${PORTAL_LOCKED_PREFIX} ${world.name} awaits — though the way there is still being built. Come back soon.`
-      );
+      openDialogue("The Portal", `The portal shimmers and settles on a path. ${chosen.name} awaits on the other side...`);
+      setTimeout(() => window.location.reload(), WORLD_SWITCH_DELAY_MS);
     });
   }
 
@@ -202,30 +226,30 @@ async function boot() {
       openDialogue(nearestNpc.name, npcDialogueLine(nearestNpc));
       if (!nearestNpc.talked) {
         nearestNpc.talked = true;
-        save.talkedNpcIds.push(nearestNpc.id);
+        worldState.talkedNpcIds.push(nearestNpc.id);
         writeSave(save);
-        inventoryUI.render(save);
+        inventoryUI.render(inventoryView());
       }
       return;
     }
 
     const collectable = findCollectableItemAt(items, center, foundIdSet(), talkedIdSet());
     if (collectable) {
-      save.foundItemIds.push(collectable.id);
+      worldState.foundItemIds.push(collectable.id);
       writeSave(save);
-      inventoryUI.render(save);
+      inventoryUI.render(inventoryView());
       fx.trigger("sparkle", collectable.x + 20, collectable.y + 20);
       playPickupChime();
-      openDialogue("Found!", `You found the ${collectable.name}. Carry it back to the lantern at the crossroads.`);
+      openDialogue("Found!", `You found the ${collectable.name}. Carry it back to ${world.deliveryLabel.toLowerCase()}.`);
       return;
     }
 
-    if (isNearLantern(lantern, center)) {
-      handleLanternInteract();
+    if (isNearDeliveryPoint(deliveryPoint, center)) {
+      handleDeliveryInteract();
       return;
     }
 
-    if (save.epilogueSeen && isNearPortal(portal, center)) {
+    if (worldState.epilogueSeen && isNearPortal(portal, center)) {
       handlePortalInteract();
     }
   }
@@ -247,6 +271,10 @@ async function boot() {
       }
     } else {
       footstepTimer = 0;
+    }
+
+    if (shakeTimeLeft > 0) {
+      shakeTimeLeft = Math.max(0, shakeTimeLeft - dt);
     }
 
     const center = playerCenter(player);
@@ -279,17 +307,37 @@ async function boot() {
     if (nearestNpc) return nearestNpc;
     const item = findCollectableItemAt(items, center, foundIdSet(), talkedIdSet());
     if (item) return item;
-    if (isNearLantern(lantern, center)) return lantern;
-    if (save.epilogueSeen && isNearPortal(portal, center)) return portal;
+    if (isNearDeliveryPoint(deliveryPoint, center)) return deliveryPoint;
+    if (worldState.epilogueSeen && isNearPortal(portal, center)) return portal;
     return null;
   }
 
+  function drawWorldDecor() {
+    if (world.decor === "troy") {
+      drawTroyAtmosphere(ctx, canvas.width, canvas.height);
+    } else if (world.decor === "uwm") {
+      drawUwmDecor(ctx);
+    } else if (world.decor === "ann-arbor") {
+      drawAnnArborDecor(ctx);
+    }
+  }
+
   function render() {
+    const shakeT = shakeTimeLeft / SHAKE_DURATION_MS;
+    const shakeMagnitude = reducedMotion ? 0 : 10 * shakeT * shakeT;
+    const shakeX = shakeMagnitude ? (Math.random() * 2 - 1) * shakeMagnitude : 0;
+    const shakeY = shakeMagnitude ? (Math.random() * 2 - 1) * shakeMagnitude : 0;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+
     drawTilemap(ctx, map);
-    drawTroyAtmosphere(ctx, canvas.width, canvas.height);
-    drawLantern(ctx, lantern, save.deliveredItemIds.length / items.length);
-    if (save.epilogueSeen) {
+    drawWorldDecor();
+    if (drawDeliveryPoint) {
+      drawDeliveryPoint(ctx, deliveryPoint, worldState.deliveredItemIds.length / items.length);
+    }
+    if (worldState.epilogueSeen) {
       drawPortal(ctx, portal);
     }
 
@@ -305,6 +353,7 @@ async function boot() {
     drawPlayer(ctx, player);
     drawInteractHint(ctx, findNearestInteractable());
     fx.draw(ctx);
+    ctx.restore();
   }
 
   startLoop({ update, render });

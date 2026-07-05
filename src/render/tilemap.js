@@ -110,6 +110,29 @@ function drawTileKind(ctx, kind, ox, oy, size) {
     put(13, 5, 2, 1, "#3a2e24");
     put(7, 4, 1, 2, "#3a2e24");
     put(12, 4, 1, 2, "#3a2e24");
+  } else if (kind === "lushGrassA") {
+    // the original daytime grove grass — used by UWM and Ann Arbor, which
+    // are sunlit towns rather than Troy's moonlit graveyard.
+    grass("#3a6b4a", "#2f5a3f", "#498059");
+  } else if (kind === "lushGrassB") {
+    grass("#356044", "#2b5039", "#417351");
+  } else if (kind === "sidewalk") {
+    put(0, 0, N, N, "#9a948a");
+    put(0, 0, N, 1, "#7f7a72");
+    put(0, N - 1, N, 1, "#7f7a72");
+    put(10, 0, 1, N, "#8a857c");
+  } else if (kind === "asphalt") {
+    put(0, 0, N, N, "#3a3f47");
+    for (let i = 0; i < 16; i += 1) {
+      const x = Math.floor(rnd() * N);
+      const y = Math.floor(rnd() * N);
+      put(x, y, 1, 1, rnd() < 0.5 ? "#31363d" : "#43494f");
+    }
+  } else if (kind === "buildingBlock") {
+    // plain filler tile that sits under a multi-tile building/house/hall
+    // overlay drawn separately in render/townDecor.js — never seen on its
+    // own, just needs to read as "blocked ground" if a corner peeks through.
+    put(0, 0, N, N, "#3a3f47");
   }
 }
 

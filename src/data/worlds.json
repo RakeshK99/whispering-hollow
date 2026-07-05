@@ -1,16 +1,77 @@
 [
   {
+    "id": "troy",
+    "name": "Troy",
+    "tag": "Starting Area",
+    "mood": "Dark · gloomy · a little spooky",
+    "desc": "The hollow you wake in — a moonlit crossroads of dead trees, old graves and lantern-glow where travelers from other realms drift through.",
+    "dataDir": "troy",
+    "cols": 20,
+    "rows": 15,
+    "playerStart": { "row": 6, "col": 9 },
+    "deliveryPoint": { "row": 5, "col": 9 },
+    "deliveryLabel": "The Lantern",
+    "deliveryKind": "lantern",
+    "portalPoint": { "row": 5, "col": 12 },
+    "decor": "troy",
+    "introTitle": "Whispering Hollow",
+    "introParagraphs": [
+      "Once a year, when the moon sits directly between four worlds, the paths through the Hollow align — and anyone lost in the crossing can, for one night, find their way home.",
+      "Tonight, four travelers arrived by accident, each missing the one thing they need to leave. You're the only one who can walk all four paths. Find what they lost, and carry it back to the lantern at the crossroads before the paths close."
+    ],
+    "idleText": "An old iron lantern stands at the crossroads, its flame unlit and waiting.",
+    "progressTextTemplate": "The lantern's flame flickers gently. {delivered} of {total} travelers are on their way home.",
+    "calmText": "The lantern burns steady and warm. The travelers are home — and something new glimmers at the crossroads.",
+    "epilogueText": "As the last treasure settles into the lantern's flame, it flares bright gold — and beside it, the air itself begins to fold, a shimmering portal blinking open at the crossroads. Kiri, Sable, Wren, and Mochi each pause to look back at you, one last time, before their night finally comes to an end. Something tells you this crossroads isn't finished with you yet."
+  },
+  {
     "id": "uwm",
     "name": "UWM",
     "tag": "Finance District",
     "mood": "Suburban meets urban",
-    "desc": "A tidy money town: a columned bank anchors a street of suburban homes, where builders, dancers and traders go about their day."
+    "desc": "A tidy money town: a columned bank anchors a street of suburban homes, where builders, dancers and traders go about their day.",
+    "dataDir": "uwm",
+    "cols": 20,
+    "rows": 13,
+    "playerStart": { "row": 6, "col": 9 },
+    "deliveryPoint": { "row": 4, "col": 10 },
+    "deliveryLabel": "The Vault",
+    "deliveryKind": "vault",
+    "portalPoint": { "row": 4, "col": 14 },
+    "decor": "uwm",
+    "introTitle": "UWM",
+    "introParagraphs": [
+      "The portal exhales and you step out somewhere entirely different — a tidy, sun-warmed town called UWM, where a columned bank watches over quiet suburban streets.",
+      "The crossroads' magic doesn't just move you between worlds, it seems — it tangles loose ends together. Five familiar faces are going about their day here, each missing some small thing they'd never admit they need. Maybe that's why the portal brought you."
+    ],
+    "idleText": "A heavy bank vault stands sealed at the edge of the street, waiting for something to be set right.",
+    "progressTextTemplate": "The vault's lock glows faintly warmer. {delivered} of {total} favors have been returned.",
+    "calmText": "The vault sits open and gleaming. Everyone here has what they lost — and something new shimmers down the street.",
+    "epilogueText": "As the last favor settles into the vault, its lock flares gold and clicks open on its own — and beside it, the air folds into a shimmering portal. Eesha, Sungat, Rohit, Prakhar, and Nithy each wave before heading back to their day. Something tells you the crossroads still has one more place to show you."
   },
   {
     "id": "ann-arbor",
     "name": "Ann Arbor",
     "tag": "College City",
     "mood": "Maize & blue campus",
-    "desc": "A bustling university city — a collegiate hall of maize and blue flanked by downtown blocks, full of students to meet and challenge."
+    "desc": "A bustling university city — a collegiate hall of maize and blue flanked by downtown blocks, full of students to meet and challenge.",
+    "dataDir": "ann-arbor",
+    "cols": 20,
+    "rows": 13,
+    "playerStart": { "row": 8, "col": 9 },
+    "deliveryPoint": { "row": 5, "col": 9 },
+    "deliveryLabel": "The Big M",
+    "deliveryKind": "bigm",
+    "portalPoint": { "row": 5, "col": 12 },
+    "decor": "ann-arbor",
+    "introTitle": "Ann Arbor",
+    "introParagraphs": [
+      "The portal opens onto noise and color — Ann Arbor, a college city buzzing under a banner of maize and blue. Students cut across the plaza in every direction.",
+      "Somewhere in all this motion, three people you'd recognize anywhere are quietly missing something of their own. The crossroads, it seems, isn't finished weaving its threads together yet."
+    ],
+    "idleText": "The Big M gleams underfoot, painted bright even in the daylight — though something about it feels unfinished.",
+    "progressTextTemplate": "The Big M glows a little brighter. {delivered} of {total} things have found their way back.",
+    "calmText": "The Big M shines gold, whole and complete. Everyone here has what they lost — and something new shimmers across the plaza.",
+    "epilogueText": "As the last keepsake settles onto the Big M, it blazes gold — and beside it, the air folds into a shimmering portal. Vish, Bhuvi, and Vedant each look back at you, grinning, before the plaza swallows their voices again. You've walked every path the crossroads had to show you — for now."
   }
 ]

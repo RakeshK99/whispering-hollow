@@ -1,0 +1,38 @@
+[
+  {
+    "id": "vish",
+    "name": "Vish the Gamer",
+    "position": { "row": 12, "col": 3 },
+    "dialogue": {
+      "intro": "I was mid-match when I dropped my lucky controller grip somewhere on campus — haven't won a single round since. Not superstitious, just... very specific about my gear.",
+      "reminder": "Still no grip. My win rate is suffering, not that I'm counting.",
+      "thanks": "YES. Okay, back in the game — literally. Thank you, seriously.",
+      "farewell": "GG. Go show the crossroads what you're made of."
+    },
+    "linkedItemId": "controller-grip"
+  },
+  {
+    "id": "bhuvi",
+    "name": "Bhuvi the Baller",
+    "position": { "row": 12, "col": 9 },
+    "dialogue": {
+      "intro": "Somewhere between here and the plaza, I lost my lucky cleats. Can't play my best without them — every striker's got a thing, and that's mine.",
+      "reminder": "Still barefoot in spirit without those cleats.",
+      "thanks": "There they are! Back in form already. Appreciate you, truly.",
+      "farewell": "See you on the pitch someday. Thanks for the assist."
+    },
+    "linkedItemId": "lucky-cleats"
+  },
+  {
+    "id": "vd",
+    "name": "Vedant the Driver",
+    "position": { "row": 12, "col": 15 },
+    "dialogue": {
+      "intro": "Dropped my keychain somewhere near the plaza — small thing, but it's got sentimental value. Can't drive anywhere without feeling like something's missing.",
+      "reminder": "Still missing that keychain. Doesn't feel right without it.",
+      "thanks": "There it is. Appreciate it — that one actually means a lot to me.",
+      "farewell": "Drive safe out there, wherever the crossroads takes you next."
+    },
+    "linkedItemId": "chrome-keychain"
+  }
+]

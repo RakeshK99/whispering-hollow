@@ -191,6 +191,220 @@ const NPC_SPRITES = {
     map: { ".": null, G: "#4aa86a", d: "#357a52", S: "#bfe8c8", X: "#20301c" },
     float: true,
   },
+  // ---- UWM: finance district ----
+  eesha: {
+    rows: [
+      "....HHHHHH......",
+      "...HHHHHHHH.....",
+      "..HHHHHHHHHH....",
+      "...hssssshh.h...",
+      "...hsXssXsh.hh..",
+      "...hssssssh.hh..",
+      "...hsddddsh..h..",
+      "....ssssss......",
+      "....cccccc..g...",
+      "...oooooooo.g...",
+      "..soooooooos....",
+      "..soooooooos....",
+      "...oo..oo.......",
+      "...oo..oo.......",
+      "...bb..bb.......",
+      "................",
+    ],
+    map: { ".": null, H: "#e0c14a", h: "#5b3a24", s: "#eab892", X: "#2b1c14", d: "#c78a5c", c: "#d95b5b", o: "#4a6fd0", g: "#b7b7c2", b: "#3a2a1a" },
+  },
+  sungat: {
+    rows: [
+      "....TTTTTT......",
+      "...TTTTTTTT.....",
+      "...TTTTTTTT.....",
+      "...sssssss......",
+      "...sXsssXs......",
+      "...sssssss......",
+      "...BBBBBBB......",
+      "....BBBBB.......",
+      "g..vkkkkkv..g...",
+      ".g.vkkkkkv.g....",
+      "..svkkkkkvs.....",
+      "...kkkkkkk......",
+      "...kkkkkkk......",
+      "...pp..pp.......",
+      "...ff..ff.......",
+      "................",
+    ],
+    map: { ".": null, T: "#e0724a", s: "#d99b6a", X: "#2b1c14", B: "#2b2018", k: "#d84a90", v: "#e0c14a", g: "#d99b6a", p: "#f0e6d2", f: "#5b4636" },
+  },
+  rohit: {
+    rows: [
+      "....hhhhhh......",
+      "...hRRRRRRh.....",
+      "...hssssssh.....",
+      "...hsXssXsh.....",
+      "...hssssssh.....",
+      "...hsddddsh.....",
+      "....ssssss......",
+      "....jjjjjj......",
+      "...jjNNjj...o...",
+      "..sjjjjjjs..o...",
+      "..sjjjjjjs......",
+      "...wwwwww.......",
+      "...ss..ss.......",
+      "...ss..ss.......",
+      "...bb..bb.......",
+      "................",
+    ],
+    map: { ".": null, h: "#2b2018", R: "#d95b5b", s: "#c98a5c", X: "#2b1c14", d: "#a86b3c", j: "#4a90d9", N: "#f0e6d2", w: "#f0e6d2", o: "#e0724a", b: "#f0f0f0" },
+  },
+  prakharP: {
+    rows: [
+      "....LLLL........",
+      "...LLLLLL.......",
+      "...LssssL.......",
+      "...sXssXs.......",
+      "...ssqqss.......",
+      "....ssss........",
+      "...jjjjjj.......",
+      "..jJjjjjJj......",
+      "..sjjjjjjs......",
+      "..sjjjjjjs......",
+      "...jjjjjj.......",
+      "...pp..pp.......",
+      "...pp..pp.......",
+      "...bb..bb.......",
+      "................",
+      "................",
+    ],
+    map: { ".": null, L: "#4a3628", s: "#d9a878", X: "#2b1c14", q: "#c0895a", j: "#241c16", J: "#5b4636", p: "#2e2a26", b: "#141414" },
+  },
+  horse: {
+    rows: [
+      "................",
+      "................",
+      "..............N.",
+      ".............NNN.",
+      ".THHHHHHHHHNNNN..",
+      ".THHHHHHHHH.NeN..",
+      "..HHHHHHHHH.NNN..",
+      "..HHHHHHHHH......",
+      "..m.mm.mm.m.....",
+      "..m.mm.mm.m.....",
+      "..u.uu.uu.u.....",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+    map: { ".": null, H: "#8a6a3a", N: "#8a6a3a", T: "#5b4636", m: "#6e5236", u: "#2b2018", e: "#2b1c14" },
+  },
+  prakhar: { combo: [{ key: "prakharP", dx: 0, dy: 0 }, { key: "horse", dx: 13, dy: 3 }], width: 28 },
+  nithy: {
+    rows: [
+      "....hhhhhh......",
+      "...hhhhhhhh.....",
+      "...hssssssh.....",
+      "...hGGGGGGh.....",
+      "...hssssssh.....",
+      "...hsddddsh.....",
+      "....ssssss......",
+      "....SwwwwS......",
+      "...SSwttwSS.....",
+      "..sSSwttwSS.P...",
+      "..sSSSSSSSs.P...",
+      "...SSSSSSSS.....",
+      "...SS..SS.......",
+      "...SS..SS.......",
+      "...bb..bb.......",
+      "................",
+    ],
+    map: { ".": null, h: "#1a1712", s: "#d9a878", X: "#2b1c14", d: "#a86b3c", G: "#141414", S: "#2b3350", w: "#f0e6d2", t: "#d4a24c", P: "#141414", b: "#141414" },
+  },
+  // ---- Ann Arbor: college city ----
+  vish: {
+    rows: [
+      "...HHHHHHHH.....",
+      "..EHhhhhhhHE....",
+      "..Ehssssssh.E...",
+      "...hsXssXsh.....",
+      "...hssssssh.....",
+      "...hsddddsh.....",
+      "....ssssss......",
+      "....uuuuuu......",
+      "...uuuuuuuu.....",
+      "..suuuuuuus.....",
+      "...cccccc.......",
+      "..cKcKcKcKc.....",
+      "...uu..uu.......",
+      "...uu..uu.......",
+      "...bb..bb.......",
+      "................",
+    ],
+    map: { ".": null, H: "#2b2018", E: "#4a90d9", h: "#5b3a24", s: "#eab892", X: "#2b1c14", d: "#c78a5c", u: "#7a5ac9", c: "#9aa0ad", K: "#2b2018", b: "#2b2018" },
+  },
+  bhuvi: {
+    rows: [
+      "....hhhhhh......",
+      "...hhhhhhhh.....",
+      "...hssssssh.....",
+      "...hsXssXsh.....",
+      "...hssssssh.....",
+      "...hsddddsh.....",
+      "....ssssss......",
+      "....jJjJjJ......",
+      "...jJjJjJjJ.....",
+      "..sjJjJjJjs.....",
+      "...wwwwww.......",
+      "...kk..kk.......",
+      "...kk..kk.......",
+      "...bb..bb.......",
+      ".....OWO........",
+      "....OWOWO.......",
+    ],
+    map: { ".": null, h: "#2b2018", s: "#c98a5c", X: "#2b1c14", d: "#a86b3c", j: "#e0724a", J: "#f0e6d2", w: "#2b3350", k: "#c98a5c", b: "#141414", O: "#f0f0f0", W: "#2b2018" },
+  },
+  vedantP: {
+    rows: [
+      "....hhhhhh......",
+      "...hhhhhhhh.....",
+      "...hssssssh.....",
+      "...hGGGGGGh.....",
+      "...hssssssh.....",
+      "...hsqqqqsh.....",
+      "....ssssss......",
+      "...jjjjjjjj.....",
+      "..jJjwwjJjj.....",
+      "..sjjwwjjjs..K..",
+      "..sjjjjjjjs..K..",
+      "...jjjjjjjj.....",
+      "...pp..pp.......",
+      "...pp..pp.......",
+      "...bb..bb.......",
+      "................",
+    ],
+    map: { ".": null, h: "#1a1712", s: "#d9a878", G: "#141414", q: "#c0895a", j: "#7a2a2a", J: "#d4a24c", w: "#c9cdd3", K: "#d4a24c", p: "#3a4a6b", b: "#141414" },
+  },
+  car: {
+    rows: [
+      "................",
+      "................",
+      "................",
+      "......CCCC......",
+      ".....CCggCC.....",
+      "...CCCCCCCCCC...",
+      "..CCCCCCCCCCCC..",
+      ".RCCCCCoCCCCCL..",
+      ".aaCCCCCCCCCaa..",
+      "..WW......WW....",
+      ".WHHW....WHHW...",
+      "..WW......WW....",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+    map: { ".": null, C: "#c9cdd3", g: "#243040", o: "#e6e8ea", L: "#f4f0d8", R: "#c23a3a", a: "#111111", W: "#161616", H: "#d0d3d8" },
+  },
+  vd: { combo: [{ key: "vedantP", dx: 0, dy: 0 }, { key: "car", dx: 13, dy: 4 }], width: 28 },
 };
 
 function drawPixelGrid(ctx, rows, colorMap, ox, oy, u, { tunic, phase, dir } = {}) {
@@ -257,6 +471,17 @@ export function drawNpc(ctx, npc) {
     ctx.ellipse(x + size / 2, npc.y + offset + size * 0.94, size * 0.28 * shadowScale, size * 0.08 * shadowScale, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
+  }
+
+  if (sprite.combo) {
+    // "combo" characters (Prakhar + his horse, Vedant + his car) are two
+    // sprites drawn together, wider than a single tile.
+    sprite.combo.forEach((part) => {
+      const partSprite = NPC_SPRITES[part.key];
+      if (!partSprite) return;
+      drawPixelGrid(ctx, partSprite.rows, partSprite.map, x + (part.dx || 0) * SPRITE_UNIT, y + (part.dy || 0) * SPRITE_UNIT, SPRITE_UNIT);
+    });
+    return;
   }
 
   drawPixelGrid(ctx, sprite.rows, sprite.map, x, y, SPRITE_UNIT);
@@ -350,6 +575,107 @@ export function drawLantern(ctx, lantern, progress) {
   }
 }
 
+const VAULT_ROWS = [
+  "...VVVVVV...",
+  "..VVVVVVVV..",
+  ".VVVVVVVVVV.",
+  "VVVVLLLLVVVV",
+  "VVVLLwwLLVVV",
+  "VVVLLwwLLVVV",
+  "VVVVLLLLVVVV",
+  ".VVVVVVVVVV.",
+  "..VVVVVVVV..",
+  "...VVVVVV...",
+];
+
+// UWM's delivery object — a bank vault door whose lock ring and center
+// window warm from dull steel to gold as items are delivered.
+export function drawVault(ctx, vault, progress) {
+  const unit = 3.1;
+  const width = 12 * unit;
+  const height = 10 * unit;
+  const ox = vault.x + (40 - width) / 2;
+  const oy = vault.y + (40 - height) / 2;
+  const pulse = 0.85 + Math.sin(performance.now() / 500) * 0.15;
+  const lockColor = mix("#5a5f66", "#ffe9a8", progress);
+  const glowHex = mix("#5a5f66", "#f0deb2", progress);
+  const glowAlpha = 0.12 + progress * 0.4;
+  const glowRadius = 12 + progress * 34 * pulse;
+
+  const cx = ox + width / 2;
+  const cy = oy + height / 2;
+  const glow = ctx.createRadialGradient(cx, cy, 1, cx, cy, glowRadius);
+  glow.addColorStop(0, hexToRgba(glowHex, glowAlpha));
+  glow.addColorStop(1, hexToRgba(glowHex, 0));
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - glowRadius, cy - glowRadius, glowRadius * 2, glowRadius * 2);
+
+  for (let y = 0; y < VAULT_ROWS.length; y += 1) {
+    const row = VAULT_ROWS[y];
+    for (let x = 0; x < row.length; x += 1) {
+      const ch = row[x];
+      let color = null;
+      if (ch === "V") color = "#4a4f57";
+      else if (ch === "L") color = lockColor;
+      else if (ch === "w") color = mix("#3a3f47", "#fff6da", progress);
+      if (!color) continue;
+      ctx.fillStyle = color;
+      ctx.fillRect(Math.round(ox + x * unit), Math.round(oy + y * unit), Math.ceil(unit), Math.ceil(unit));
+    }
+  }
+}
+
+const BIGM_ROWS = [
+  "PPPPPPPPPPPP",
+  "PMPPPPPPPPMP",
+  "PMMPPPPPPMMP",
+  "PMMMPPPPMMMP",
+  "PMBMMPPMMBMP",
+  "PMBBMMMMBBMP",
+  "PMBBBMMBBBMP",
+  "PMBBBBBBBBMP",
+  "PMBBBBBBBBMP",
+  "PMBBBBBBBBMP",
+  "PPPPPPPPPPPP",
+  "..EE....EE..",
+];
+
+// Ann Arbor's delivery object — the Big M landmark, which glows brighter
+// gold as items are delivered at its base.
+export function drawBigM(ctx, bigM, progress) {
+  const unit = 3.4;
+  const width = 12 * unit;
+  const height = 12 * unit;
+  const ox = bigM.x + (40 - width) / 2;
+  const oy = bigM.y + (40 - height) / 2 - 6;
+  const pulse = 0.85 + Math.sin(performance.now() / 500) * 0.15;
+  const glowAlpha = 0.1 + progress * 0.4;
+  const glowRadius = 14 + progress * 36 * pulse;
+
+  const cx = ox + width / 2;
+  const cy = oy + height / 2;
+  const glow = ctx.createRadialGradient(cx, cy, 1, cx, cy, glowRadius);
+  glow.addColorStop(0, hexToRgba("#e0c14a", glowAlpha));
+  glow.addColorStop(1, hexToRgba("#e0c14a", 0));
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - glowRadius, cy - glowRadius, glowRadius * 2, glowRadius * 2);
+
+  for (let y = 0; y < BIGM_ROWS.length; y += 1) {
+    const row = BIGM_ROWS[y];
+    for (let x = 0; x < row.length; x += 1) {
+      const ch = row[x];
+      let color = null;
+      if (ch === "P") color = "#1c333c";
+      else if (ch === "B") color = "#274a56";
+      else if (ch === "M") color = mix("#8a6a2e", "#e0c14a", progress);
+      else if (ch === "E") color = "#3a3f47";
+      if (!color) continue;
+      ctx.fillStyle = color;
+      ctx.fillRect(Math.round(ox + x * unit), Math.round(oy + y * unit), Math.ceil(unit), Math.ceil(unit));
+    }
+  }
+}
+
 const portalReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const PORTAL_RING_COLORS = ["#d4a24c", "#cfd8e3", "#f0e6d2"];
 
@@ -363,21 +689,21 @@ export function drawPortal(ctx, portal) {
   const pulse = portalReducedMotion ? 1 : 0.85 + Math.sin(performance.now() / 400) * 0.15;
 
   ctx.save();
-  const glow = ctx.createRadialGradient(cx, cy, 2, cx, cy, 26 * pulse);
-  glow.addColorStop(0, "rgba(212, 162, 76, 0.5)");
+  const glow = ctx.createRadialGradient(cx, cy, 2, cx, cy, 52 * pulse);
+  glow.addColorStop(0, "rgba(212, 162, 76, 0.55)");
   glow.addColorStop(1, "rgba(212, 162, 76, 0)");
   ctx.fillStyle = glow;
-  ctx.fillRect(cx - 30, cy - 30, 60, 60);
+  ctx.fillRect(cx - 60, cy - 60, 120, 120);
 
   PORTAL_RING_COLORS.forEach((color, i) => {
-    const radius = 8 + i * 5;
+    const radius = 16 + i * 10;
     const spin = portalReducedMotion ? 0 : t * (i % 2 === 0 ? 1 : -1);
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(spin + (i * Math.PI) / 3);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 3;
+    ctx.setLineDash([7, 7]);
     ctx.beginPath();
     ctx.arc(0, 0, radius, 0, Math.PI * 2);
     ctx.stroke();
@@ -386,7 +712,7 @@ export function drawPortal(ctx, portal) {
 
   ctx.fillStyle = "#f0e6d2";
   ctx.beginPath();
-  ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+  ctx.arc(cx, cy, 5, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }

@@ -1,15 +1,38 @@
 const STORAGE_KEY = "whispering-hollow-save";
+const WORLD_IDS = ["troy", "uwm", "ann-arbor"];
 
-function defaultSave(customizationData, muted = false, hasSeenIntro = false) {
+function defaultWorldState() {
   return {
     talkedNpcIds: [],
     foundItemIds: [],
     deliveredItemIds: [],
+    epilogueSeen: false,
+    hasSeenIntro: false,
+  };
+}
+
+function defaultSave(customizationData, muted = false) {
+  const worlds = {};
+  WORLD_IDS.forEach((id) => {
+    worlds[id] = defaultWorldState();
+  });
+  return {
     playerColor: customizationData.playerColor.default,
     muted,
-    hasSeenIntro,
-    epilogueSeen: false,
-    unlockedWorld: null,
+    currentWorld: "troy",
+    unlockedWorlds: ["troy"],
+    worlds,
+  };
+}
+
+function sanitizeWorldState(raw) {
+  if (!raw || typeof raw !== "object") return defaultWorldState();
+  return {
+    talkedNpcIds: Array.isArray(raw.talkedNpcIds) ? raw.talkedNpcIds : [],
+    foundItemIds: Array.isArray(raw.foundItemIds) ? raw.foundItemIds : [],
+    deliveredItemIds: Array.isArray(raw.deliveredItemIds) ? raw.deliveredItemIds : [],
+    epilogueSeen: Boolean(raw.epilogueSeen),
+    hasSeenIntro: Boolean(raw.hasSeenIntro),
   };
 }
 
@@ -19,25 +42,46 @@ export function loadSave(customizationData) {
     if (!raw) return defaultSave(customizationData);
     const parsed = JSON.parse(raw);
 
-    // Older saves (pre-shrine) only had `collectedItemIds`, meaning "fully
-    // done" — migrate those straight to delivered so returning players don't
-    // lose progress or see items they already found reappear on the ground.
+    if (parsed.worlds) {
+      const worlds = {};
+      WORLD_IDS.forEach((id) => {
+        worlds[id] = sanitizeWorldState(parsed.worlds[id]);
+      });
+      return {
+        playerColor: parsed.playerColor || customizationData.playerColor.default,
+        muted: Boolean(parsed.muted),
+        currentWorld: WORLD_IDS.includes(parsed.currentWorld) ? parsed.currentWorld : "troy",
+        unlockedWorlds: Array.isArray(parsed.unlockedWorlds) && parsed.unlockedWorlds.length
+          ? parsed.unlockedWorlds.filter((id) => WORLD_IDS.includes(id))
+          : ["troy"],
+        worlds,
+      };
+    }
+
+    // Migrate a pre-multi-world save (flat troy-only fields, possibly even
+    // older `collectedItemIds`-only saves) into the new per-world shape so
+    // returning players keep their Troy progress instead of losing it.
     const legacyCollected = Array.isArray(parsed.collectedItemIds) ? parsed.collectedItemIds : null;
-    const foundItemIds = Array.isArray(parsed.foundItemIds) ? parsed.foundItemIds : legacyCollected || [];
-    const deliveredItemIds = Array.isArray(parsed.deliveredItemIds)
-      ? parsed.deliveredItemIds
-      : legacyCollected || [];
+    const troyState = {
+      talkedNpcIds: Array.isArray(parsed.talkedNpcIds) ? parsed.talkedNpcIds : [],
+      foundItemIds: Array.isArray(parsed.foundItemIds) ? parsed.foundItemIds : legacyCollected || [],
+      deliveredItemIds: Array.isArray(parsed.deliveredItemIds) ? parsed.deliveredItemIds : legacyCollected || [],
+      epilogueSeen: Boolean(parsed.epilogueSeen),
+      hasSeenIntro: parsed.hasSeenIntro !== undefined ? Boolean(parsed.hasSeenIntro) : true,
+    };
+
+    const worlds = { troy: troyState, uwm: defaultWorldState(), "ann-arbor": defaultWorldState() };
+    const unlockedWorlds = ["troy"];
+    if (parsed.unlockedWorld && WORLD_IDS.includes(parsed.unlockedWorld)) {
+      unlockedWorlds.push(parsed.unlockedWorld);
+    }
 
     return {
-      talkedNpcIds: Array.isArray(parsed.talkedNpcIds) ? parsed.talkedNpcIds : [],
-      foundItemIds,
-      deliveredItemIds,
       playerColor: parsed.playerColor || customizationData.playerColor.default,
       muted: Boolean(parsed.muted),
-      // Any pre-existing save means this isn't this player's first time here.
-      hasSeenIntro: parsed.hasSeenIntro !== undefined ? Boolean(parsed.hasSeenIntro) : true,
-      epilogueSeen: Boolean(parsed.epilogueSeen),
-      unlockedWorld: parsed.unlockedWorld || null,
+      currentWorld: "troy",
+      unlockedWorlds,
+      worlds,
     };
   } catch {
     return defaultSave(customizationData);
@@ -48,11 +92,11 @@ export function writeSave(save) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
 }
 
-// Resetting progress (NPCs talked, items found/delivered) shouldn't also
-// silently flip the mute preference or re-show the intro — those are device
-// preferences, not game progress — so the caller passes them through.
+// Resetting progress starts the whole journey over — all worlds, back to
+// just Troy unlocked. Mute is a device preference, not game progress, so it
+// survives the reset.
 export function resetSave(customizationData, muted = false) {
-  const fresh = defaultSave(customizationData, muted, true);
+  const fresh = defaultSave(customizationData, muted);
   writeSave(fresh);
   return fresh;
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "eesha",
+    "name": "Eesha the Lego Builder",
+    "position": { "row": 4, "col": 2 },
+    "dialogue": {
+      "intro": "I'm mid-build on something big and I'm missing one exact brick — I dropped it somewhere near the bank steps and haven't been able to finish since. Driving me up the wall, honestly.",
+      "reminder": "Still no brick? This build isn't going to finish itself...",
+      "thanks": "That's the one! You have no idea how long I've been staring at an unfinished wall because of this. Seriously, thank you.",
+      "farewell": "Go on, get back to your crossroads. And hey — thanks for not leaving my build half-finished."
+    },
+    "linkedItemId": "missing-brick"
+  },
+  {
+    "id": "sungat",
+    "name": "Sungat the Dancer",
+    "position": { "row": 4, "col": 6 },
+    "dialogue": {
+      "intro": "I can't dance right without my lucky anklet — it's got the exact jingle I need for the beat drop. Lost it somewhere on the road. Bhangra just isn't the same without it!",
+      "reminder": "Still dancing without my anklet... it's just not right.",
+      "thanks": "Yes! Now THIS is a proper bhangra! Thank you, truly — you've got great timing, you know that?",
+      "farewell": "Dance well wherever you go next, friend. You've earned a spot in my next routine."
+    },
+    "linkedItemId": "lucky-anklet"
+  },
+  {
+    "id": "rohit",
+    "name": "Rohit the Athlete",
+    "position": { "row": 11, "col": 9 },
+    "dialogue": {
+      "intro": "Lost my game ball somewhere around here before the big match. Can't practice right without it — it's got all my luck worked into the seams.",
+      "reminder": "Still no ball. Can't believe I lost track of it.",
+      "thanks": "My ball! Let's go! I owe you one — actually, I owe you a lot more than one.",
+      "farewell": "Catch you on the other side, champ. Keep that same energy."
+    },
+    "linkedItemId": "game-ball"
+  },
+  {
+    "id": "prakhar",
+    "name": "Prakhar the Manager",
+    "position": { "row": 4, "col": 16 },
+    "dialogue": {
+      "intro": "A good manager keeps time — and I've misplaced my pocket watch somewhere along this street. Can't run a tight operation without it. My horse has been patient, but I haven't.",
+      "reminder": "Still no watch. Time waits for no one, you know.",
+      "thanks": "Ah, excellent — right on schedule. My thanks to you, truly. A good deed, well timed.",
+      "farewell": "Until our paths cross again. Keep good time out there."
+    },
+    "linkedItemId": "pocket-watch"
+  },
+  {
+    "id": "nithy",
+    "name": "Nithy the Trader",
+    "position": { "row": 11, "col": 13 },
+    "dialogue": {
+      "intro": "Lost a cufflink somewhere on my morning walk — can't close a deal looking anything less than sharp. Find it and I'll remember the favor.",
+      "reminder": "Still missing that cufflink. Not a great look, honestly.",
+      "thanks": "There it is. Sharp as ever. I don't forget favors — you've got one coming, whenever you need it.",
+      "farewell": "Pleasure doing business, friend. Don't be a stranger."
+    },
+    "linkedItemId": "gold-cufflink"
+  }
+]

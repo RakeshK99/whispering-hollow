@@ -29,35 +29,71 @@ items: give each a matching shape, don't default them all to `treasure`.
 
 ## Multi-World Structure
 
-The world the player starts in is **Troy** — a moonlit graveyard crossroads,
-reskinned from an earlier lush-grove look per a second design pass, project
-**"Copy of Whispering Hollow Visual Brief"** (project ID
-`871fff35-1062-4627-9b71-3b88b201c323`, same file name, same `DesignSync` flow).
-That atlas also defines two more worlds — **UWM** (finance district, 5
-characters) and **Ann Arbor** (college city, 3 characters) — plus a battle-
-encounter panel for "challenging" those characters. Only the portal/world-select
-*framework* is built so far; UWM and Ann Arbor are data-only stubs in
-`src/data/worlds.json` with no playable map yet, and the battle mechanic
-(agreed: a quick lighthearted stat/luck mini-game, not a full turn-based RPG)
-isn't built at all. Don't assume either exists beyond the stub dialogue.
+There are three fully playable worlds, all ported from the Claude Design
+project **"Copy of Whispering Hollow Visual Brief"** (project ID
+`871fff35-1062-4627-9b71-3b88b201c323`, file `Whispering Hollow - Asset
+Atlas.dc.html`, same `DesignSync` flow as the original atlas):
 
-Troy's tile textures are still named `grassA`/`grassB`/`path`/`tree`/`water`/
-`pond`/`flower`/`stump` in `map.json` — only the colors changed in
-`tilemap.js` (dark grass, dirt path, bare dead trees, inky water). The
-decorative moon/lamp/grave/fog layer lives in `src/render/atmosphere.js`,
-drawn after the tilemap but before characters so sprites stay full-brightness
-against the dimmed night tint.
+- **Troy** (starting world) — moonlit graveyard crossroads, reskinned from an
+  earlier lush-grove look. NPCs: Kiri, Sable, Wren, Mochi.
+- **UWM** — finance-district town (bank, houses, a road). Characters: Eesha,
+  Sungat, Rohit, Prakhar (rides a horse — a wider "combo" sprite), Nithy.
+- **Ann Arbor** — college city (university hall, the Big M landmark, flanking
+  buildings). Characters: Vish, Bhuvi, Vedant (drives a car — also a combo
+  sprite).
 
-The item-delivery loop is unchanged in mechanics — find 4 items from the 4
-NPCs, carry them, deliver them — just reskinned: the delivery object is now
-the **lantern** (`entities/lantern.js`, `drawLantern` in `sprites.js`, brightens
-per delivery) instead of a stone shrine. Delivering the 4th item sets
-`save.epilogueSeen`, which is what makes the **portal** (`entities/portal.js`,
-`drawPortal`) appear and become interactable just north of the lantern.
-Interacting with the portal opens the world-select overlay
-(`systems/worldSelect.js`) once; the chosen world is locked into
-`save.unlockedWorld` permanently (no re-picking) and shown as "coming soon"
-on future portal interactions until that world is actually built.
+**Not built yet:** the battle-encounter mechanic (agreed: a quick
+lighthearted stat/luck mini-game, not a full turn-based RPG) for "challenging"
+these characters. Don't assume it exists.
+
+Each world is fully data-driven under `src/data/<world>/{map,npcs,items}.json`,
+with per-world engine config (spawn point, delivery-object position/kind,
+portal position, intro copy, dialogue-object flavor text) in the shared
+`src/data/worlds.json`. `main.js`'s `boot()` reads `save.currentWorld`, loads
+that world's three JSON files, resizes the canvas to that world's `cols`/`rows`,
+and runs the same generic game loop — nothing about movement, dialogue, items,
+or the delivery loop is hardcoded to Troy anymore.
+
+Each world reuses the identical **find items → deliver them → portal opens →
+choose the next world** loop, just reskinned per world:
+- Troy delivers to **the lantern** (`deliveryKind: "lantern"`, brightens per delivery)
+- UWM delivers to **the vault** (`deliveryKind: "vault"`, lock glows gold as it unlocks)
+- Ann Arbor delivers to **the Big M** (`deliveryKind: "bigm"`, glows brighter per delivery)
+
+All three render via `entities/deliveryPoint.js` (position/interaction only —
+world-agnostic) and whichever draw function `sprites.js` exports for that
+`deliveryKind`. Delivering the last item sets `worldState.epilogueSeen`,
+triggers a one-shot screen-shake (`shakeTimeLeft` in `main.js`, skipped under
+`prefers-reduced-motion`), and makes the **portal** (`entities/portal.js`,
+`drawPortal`) appear next to the delivery object — positioned to the *side*,
+not directly adjacent, so its interact radius doesn't overlap the delivery
+object's.
+
+Interacting with an open portal shows `systems/worldSelect.js` filtered to
+worlds NOT YET in `save.unlockedWorlds`. Choosing one pushes it onto
+`unlockedWorlds`, sets `save.currentWorld`, and reloads the page after a short
+delay — `main.js` is stateless across worlds by design (full reload rather
+than in-memory teardown/rebuild), so don't try to hot-swap worlds without
+reloading. If no worlds remain locked, the portal shows a "you've explored
+every realm" line instead of the select screen. There is currently no way to
+travel *back* to an already-unlocked world — only forward, once per portal.
+
+Troy's tile kinds are still named `grassA`/`grassB`/`path`/`tree`/`water`/
+`pond`/`flower`/`stump` (only colors changed for the graveyard mood, in
+`tilemap.js`). UWM/Ann Arbor introduce their own kind names —
+`lushGrassA`/`lushGrassB` (the original bright grove colors), `sidewalk`,
+`asphalt`, `buildingBlock` (blocked filler under building art). Building/bank/
+university-hall/house art is a separate non-tile-grid decorative pass in
+`src/render/townDecor.js` (analogous to Troy's `atmosphere.js`), drawn on top
+of the blocked filler tiles — collision comes from the filler tiles, not the
+decoration.
+
+Save data is now nested per-world: `save.worlds.<id> = { talkedNpcIds,
+foundItemIds, deliveredItemIds, epilogueSeen, hasSeenIntro }`, plus top-level
+`save.currentWorld` and `save.unlockedWorlds`. `save.js` migrates the old
+flat (Troy-only) schema automatically. The secret "Moonlit Silver" tunic
+color unlocks once `save.unlockedWorlds.length > 1` (i.e. the player has
+completed at least one world), not tied to any single world's epilogue flag.
 
 ## Audio
 
@@ -80,14 +116,18 @@ scrolling camera, multiplayer) — that's an explicit future option, not a defau
 whispering-hollow/
 ├── index.html
 ├── src/
-│   ├── main.js                 # boot: load assets → init game → start loop
+│   ├── main.js                 # world-driven boot: read save.currentWorld → load that
+│   │                             # world's data → run the generic game loop
 │   ├── game/                   # loop.js, input.js, collision.js, camera.js
-│   ├── entities/                # player.js, npc.js, item.js, lantern.js, portal.js
+│   ├── entities/                # player.js, npc.js, item.js, deliveryPoint.js, portal.js
 │   ├── systems/                 # dialogue.js, intro.js, worldSelect.js, inventory.js,
 │   │                             # events.js, save.js, audio.js
 │   ├── render/                  # tilemap.js, sprites.js, ui.js, icons.js, atmosphere.js
-│   └── data/                     # map.json, npcs.json, items.json, customization.json,
-│                                    # worlds.json
+│   │                             # (Troy), townDecor.js (UWM/Ann Arbor)
+│   └── data/
+│       ├── worlds.json           # per-world engine config (spawn/delivery/portal/copy)
+│       ├── customization.json
+│       ├── troy/  uwm/  ann-arbor/   # each: map.json, npcs.json, items.json
 ├── public/assets/
 │   ├── sprites/  tiles/  fx/  ui/
 └── README.md
