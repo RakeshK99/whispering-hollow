@@ -1,0 +1,11 @@
+{
+  "playerColor": {
+    "options": ["#e0724a", "#4a90d9", "#7ac97a", "#e0c14a", "#c264c9"],
+    "default": "#e0724a"
+  },
+  "secretPlayerColor": {
+    "hex": "#cfd8e3",
+    "name": "Moonlit Silver",
+    "unlockedBy": "epilogue"
+  }
+}

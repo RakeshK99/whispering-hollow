@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Whispering Hollow</title>
+
+  <meta property="og:title" content="Whispering Hollow" />
+  <meta property="og:description" content="A tiny explorable grove full of hidden treasures — find them all." />
+  <meta property="og:image" content="/public/assets/ui/og-preview.png" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --color-bg-deep: #16281c;
+      --color-parchment: #f0e6d2;
+      --color-ink: #2b2018;
+      --color-gold: #d4a24c;
+      --font-display: 'Silkscreen', monospace;
+      --font-body: 'Nunito', system-ui, sans-serif;
+      --space-xs: 4px;
+      --space-s: 8px;
+      --space-m: 12px;
+      --space-l: 16px;
+      --space-xl: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-bg-deep);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      height: 100%;
+    }
+
+    #app {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: var(--space-l);
+      flex-wrap: wrap;
+      padding: var(--space-l);
+      min-height: 100%;
+    }
+
+    #game-container {
+      position: relative;
+      width: 800px;
+      max-width: 100%;
+      flex-shrink: 0;
+    }
+
+    #game-canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 800 / 600;
+      background: var(--color-bg-deep);
+      image-rendering: pixelated;
+      border: 4px solid var(--color-gold);
+      border-radius: 4px;
+    }
+
+    .panel {
+      background: var(--color-parchment);
+      color: var(--color-ink);
+      border: 3px solid var(--color-ink);
+      border-radius: 6px;
+      padding: var(--space-m);
+    }
+
+    #sidebar {
+      width: 260px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-m);
+    }
+
+    #sidebar h1 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      margin: 0 0 var(--space-s);
+    }
+
+    .tabs {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    .tab-button {
+      flex: 1;
+      background: var(--color-gold);
+      color: var(--color-ink);
+      border: 2px solid var(--color-ink);
+      border-radius: 4px;
+      padding: var(--space-xs) var(--space-s);
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .tab-button:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #ffffff;
+      outline-offset: 2px;
+    }
+
+    .tab-button[aria-selected="false"] {
+      background: transparent;
+    }
+
+    .tab-panel[hidden] { display: none; }
+
+    #quest-log-list, #inventory-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    #quest-log-list li, #inventory-list li {
+      font-size: 0.9rem;
+      padding: var(--space-xs) 0;
+      border-bottom: 1px solid rgba(43, 32, 24, 0.2);
+    }
+
+    .icon-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-s);
+    }
+
+    .icon-row canvas {
+      flex-shrink: 0;
+      image-rendering: pixelated;
+    }
+
+    #color-picker {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    .color-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--color-ink);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .color-swatch[aria-pressed="true"] {
+      box-shadow: 0 0 0 3px var(--color-gold);
+    }
+
+    .color-swatch-secret {
+      box-shadow: 0 0 6px 1px var(--color-gold);
+    }
+
+    .color-swatch-secret[aria-pressed="true"] {
+      box-shadow: 0 0 6px 1px var(--color-gold), 0 0 0 3px var(--color-gold);
+    }
+
+    #reset-progress {
+      background: #a44a3f;
+      color: var(--color-parchment);
+      border: 2px solid var(--color-ink);
+      border-radius: 4px;
+      padding: var(--space-xs) var(--space-s);
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    #dialogue-overlay {
+      position: absolute;
+      left: var(--space-l);
+      right: var(--space-l);
+      bottom: var(--space-l);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    #dialogue-overlay[hidden] { display: none; }
+
+    #intro-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 18, 12, 0.78);
+      padding: var(--space-l);
+    }
+
+    #intro-overlay[hidden] { display: none; }
+
+    #intro-card {
+      max-width: 440px;
+      text-align: center;
+    }
+
+    #intro-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      margin: 0 0 var(--space-m);
+    }
+
+    #intro-card p {
+      line-height: 1.55;
+      margin: 0 0 var(--space-m);
+    }
+
+    #intro-begin {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      padding: var(--space-s) var(--space-l);
+      background: var(--color-gold);
+      color: var(--color-ink);
+      border: 2px solid var(--color-ink);
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #a97e34;
+      margin-top: var(--space-xs);
+    }
+
+    #dialogue-name {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    #dialogue-text {
+      margin: 0;
+    }
+
+    #touch-controls {
+      display: none;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    body.touch #touch-controls {
+      display: block;
+    }
+
+    #dpad {
+      position: absolute;
+      left: var(--space-l);
+      bottom: var(--space-l);
+      display: grid;
+      grid-template-columns: repeat(3, 48px);
+      grid-template-rows: repeat(3, 48px);
+      gap: var(--space-xs);
+      pointer-events: auto;
+    }
+
+    #dpad button {
+      background: rgba(240, 230, 210, 0.85);
+      border: 2px solid var(--color-ink);
+      border-radius: 6px;
+      font-size: 1.2rem;
+    }
+
+    #dpad-up { grid-column: 2; grid-row: 1; }
+    #dpad-left { grid-column: 1; grid-row: 2; }
+    #dpad-right { grid-column: 3; grid-row: 2; }
+    #dpad-down { grid-column: 2; grid-row: 3; }
+
+    #interact-button {
+      position: absolute;
+      right: var(--space-l);
+      bottom: var(--space-l);
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      border: 2px solid var(--color-ink);
+      font-weight: 700;
+      pointer-events: auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="game-container">
+      <canvas id="game-canvas" width="800" height="600" aria-label="Whispering Hollow game view"></canvas>
+
+      <div id="dialogue-overlay" class="panel" hidden>
+        <p id="dialogue-name"></p>
+        <p id="dialogue-text"></p>
+      </div>
+
+      <div id="intro-overlay" hidden>
+        <div id="intro-card" class="panel">
+          <h2>Whispering Hollow</h2>
+          <p>
+            Once a year, when the moon sits directly between four worlds, the paths through the
+            Hollow align — and anyone lost in the crossing can, for one night, find their way home.
+          </p>
+          <p>
+            Tonight, four travelers arrived by accident, each missing the one thing they need to
+            leave. You're the only one who can walk all four paths. Find what they lost, and carry
+            it back to the shrine at the crossroads before the paths close.
+          </p>
+          <button id="intro-begin" type="button">Begin the Night</button>
+        </div>
+      </div>
+
+      <div id="touch-controls">
+        <div id="dpad">
+          <button id="dpad-up" type="button" aria-label="Move up">▲</button>
+          <button id="dpad-left" type="button" aria-label="Move left">◀</button>
+          <button id="dpad-right" type="button" aria-label="Move right">▶</button>
+          <button id="dpad-down" type="button" aria-label="Move down">▼</button>
+        </div>
+        <button id="interact-button" type="button" aria-label="Interact">talk</button>
+      </div>
+    </div>
+
+    <aside id="sidebar" class="panel">
+      <h1>Whispering Hollow</h1>
+
+      <div class="tabs" role="tablist">
+        <button id="tab-quest" class="tab-button" role="tab" aria-selected="true" aria-controls="panel-quest">Quest Log</button>
+        <button id="tab-inventory" class="tab-button" role="tab" aria-selected="false" aria-controls="panel-inventory">Inventory</button>
+      </div>
+
+      <div id="panel-quest" class="tab-panel" role="tabpanel" aria-labelledby="tab-quest">
+        <ul id="quest-log-list"></ul>
+      </div>
+
+      <div id="panel-inventory" class="tab-panel" role="tabpanel" aria-labelledby="tab-inventory" hidden>
+        <ul id="inventory-list"></ul>
+      </div>
+
+      <div>
+        <p style="margin: 0 0 var(--space-xs); font-weight: 600;">Color</p>
+        <div id="color-picker"></div>
+      </div>
+
+      <div style="display: flex; gap: var(--space-xs);">
+        <button id="mute-toggle" type="button" class="tab-button" aria-pressed="false">SOUND: ON</button>
+        <button id="reset-progress" type="button">Reset Progress</button>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

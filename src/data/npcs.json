@@ -1,0 +1,54 @@
+[
+  {
+    "id": "kiri",
+    "name": "Kiri the Ember Sprite",
+    "sprite": "npc_kiri_idle.png",
+    "position": { "row": 3, "col": 4 },
+    "dialogue": {
+      "intro": "My charm slipped loose mid-dance, right where the old stump keeps its rings — without it my flame gutters lower every hour. Find it before the paths close, won't you?",
+      "reminder": "Any luck by the stump? I can feel my light dimming...",
+      "thanks": "You found it — oh, thank the embers! I can feel my flame steady again. When the crossroads closes tonight, I'll dance one more time before I go, for you.",
+      "farewell": "The path home is opening. Dance well, little wanderer — and thank you, truly."
+    },
+    "linkedItemId": "ember-charm"
+  },
+  {
+    "id": "sable",
+    "name": "Sable the Shade-Fox",
+    "sprite": "npc_sable_idle.png",
+    "position": { "row": 6, "col": 15 },
+    "dialogue": {
+      "intro": "I chart my way home by moonlight caught in glass — and mine slipped from my paw into the still water east of here. Without it, I can't find my way through the dark between worlds.",
+      "reminder": "The water still holds it, I think. Or... I hope.",
+      "thanks": "There it is — my little piece of the moon. I can find my way again. You've done more for a stranger than most of my own court would.",
+      "farewell": "The moon is rising on my side of the crossroads. Travel safely, and remember — not all shadows are unkind."
+    },
+    "linkedItemId": "tide-glass-shard"
+  },
+  {
+    "id": "wren",
+    "name": "Wren the Traveling Scholar",
+    "sprite": "npc_wren_idle.png",
+    "position": { "row": 9, "col": 6 },
+    "dialogue": {
+      "intro": "I've been cataloguing the Hollow for three years and I still lose my place constantly — my good bookmark slipped from my journal somewhere past the ninth stone on the path. Silly, I know, to need a pressed leaf so badly.",
+      "reminder": "Still no leaf? My journal keeps flopping open to the wrong page without it.",
+      "thanks": "My bookmark — wonderful! Now my notes on tonight's crossing will actually stay in order. You should know, this is the first time in three years anyone's helped me with anything.",
+      "farewell": "I'll write about you in my journal, whoever you are. Safe travels, and thank you for humoring an over-organized scholar."
+    },
+    "linkedItemId": "pressed-leaf-bookmark"
+  },
+  {
+    "id": "mochi",
+    "name": "Mochi the Slime Guardian",
+    "sprite": "npc_mochi_idle.png",
+    "position": { "row": 11, "col": 13 },
+    "dialogue": {
+      "intro": "Mochi... not feel whole. Bead rolled away, somewhere flowers grow. Mochi feel wobbly without it. Please find?",
+      "reminder": "Still wobbly... bead still lost...",
+      "thanks": "Bead! Mochi whole again! Mochi say... thank you, friend. Mochi remember this.",
+      "farewell": "Mochi go home now. Mochi happy. Mochi... will miss new friend."
+    },
+    "linkedItemId": "dew-jelly-bead"
+  }
+]

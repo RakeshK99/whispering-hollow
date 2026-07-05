@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ember-charm",
+    "name": "Sunfire Charm",
+    "icon": "item_ember-charm.png",
+    "shape": "charm",
+    "position": { "row": 6, "col": 4 },
+    "rarity": "common",
+    "revealedBy": "kiri",
+    "secret": false
+  },
+  {
+    "id": "tide-glass-shard",
+    "name": "Tide-Glass Shard",
+    "icon": "item_tide-glass-shard.png",
+    "shape": "shard",
+    "position": { "row": 9, "col": 16 },
+    "rarity": "rare",
+    "revealedBy": "sable",
+    "secret": false
+  },
+  {
+    "id": "pressed-leaf-bookmark",
+    "name": "Pressed Leaf Bookmark",
+    "icon": "item_pressed-leaf-bookmark.png",
+    "shape": "leaf",
+    "position": { "row": 8, "col": 16 },
+    "rarity": "common",
+    "revealedBy": "wren",
+    "secret": false
+  },
+  {
+    "id": "dew-jelly-bead",
+    "name": "Dew-Jelly Bead",
+    "icon": "item_dew-jelly-bead.png",
+    "shape": "bead",
+    "position": { "row": 11, "col": 12 },
+    "rarity": "limited",
+    "revealedBy": "mochi",
+    "secret": false
+  }
+]

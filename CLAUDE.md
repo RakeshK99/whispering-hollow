@@ -3,6 +3,39 @@
 Browser-based explorable pixel-art game. Full design/architecture spec lives in
 `whispering-hollow-architecture.md` — read it for details this file only summarizes.
 
+## Visual Assets — Real, Not Placeholder
+
+All pixel art (player, 4 NPCs, tiles, icons, FX) is ported directly from the
+Claude Design project **"Whispering Hollow Visual Brief"**
+(project ID `3c367480-358d-4356-bb01-93086977e9b5`, file
+`Whispering Hollow - Asset Atlas.dc.html`), read via the `DesignSync` tool. It's all
+procedural canvas-drawing code (pixel-grid strings + a color map), not PNG files —
+`src/render/tilemap.js`, `sprites.js`, and `icons.js` are direct ports of that source.
+If visuals need to change, either edit the ported drawing code directly, or re-pull
+the atlas file from that project ID if the source design changes upstream.
+
+The 4 NPCs are **Kiri** (ember sprite, floating), **Sable** (shade-fox spirit),
+**Wren** (traveling scholar), **Mochi** (slime guardian, floating) — not generic
+placeholders. Tile kinds in `map.json` use the atlas's own names directly:
+`grassA`, `grassB`, `path`, `flower`, `tree`, `water` (deep, blocked), `pond`
+(shore/edge, walkable-event), `stump` (walkable-event). FX are named `sparkle`
+(item reveal), `confetti` (stump "dance" event), `splash` (pond-edge event),
+`dust` (footstep puffs while walking).
+
+Each item also has a `shape` field (`charm`/`shard`/`leaf`/`bead`, defined in
+`src/render/icons.js`) so collectibles read as visually distinct instead of
+sharing one generic treasure-chest icon — keep this in mind when adding new
+items: give each a matching shape, don't default them all to `treasure`.
+
+## Audio
+
+SFX are synthesized at runtime via the Web Audio API in `src/systems/audio.js` —
+no audio files, consistent with the procedural-visuals approach above. Mute
+state lives in save data (`save.muted`) and survives a progress reset (it's a
+device preference, not game progress — see `resetSave` in `save.js`). There is
+no background music by user's choice — don't add a looping ambient track
+without checking first.
+
 ## Tech Stack
 
 Vanilla JS + HTML5 Canvas. No build step, no framework. Do not introduce a bundler or
@@ -35,8 +68,9 @@ whispering-hollow/
   `color-danger #a44a3f` (destructive actions only)
 - `tile-size`: 40px, `sprite-size`: 32px, world grid: 20 cols x 15 rows (800x600px)
 - Spacing scale: `space-xs/s/m/l/xl` = 4/8/12/16/24px — never use arbitrary spacing values
-- Fonts: `font-display` (chunky pixel/bitmap, titles/names/buttons), `font-body`
-  (clean sans-serif, dialogue/hints/quest log)
+- Fonts: `font-display` = Silkscreen (chunky pixel/bitmap, titles/names/buttons),
+  `font-body` = Nunito (clean sans-serif, dialogue/hints/quest log) — loaded via
+  Google Fonts in `index.html`, exposed as CSS vars `--font-display`/`--font-body`
 
 ## Component Rules
 
@@ -58,6 +92,10 @@ tile_[type]_[variant].png                 e.g. tile_grass_a.png
 fx_[name]_[frame].png                     e.g. fx_sparkle_01.png
 ui_[element].png                          e.g. ui_dialogue_frame.png
 ```
+
+This convention still applies if real exported PNG sprite sheets are ever added to
+`public/assets/`. For now everything is drawn procedurally in `src/render/` (ported
+from the atlas — see above), so there are no files to name yet.
 
 ## Content = Data, Not Code
 
