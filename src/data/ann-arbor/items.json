@@ -2,7 +2,7 @@
   {
     "id": "controller-grip",
     "name": "Lucky Controller Grip",
-    "shape": "bead",
+    "shape": "controller",
     "position": { "row": 6, "col": 4 },
     "rarity": "common",
     "revealedBy": "vish",
@@ -11,7 +11,7 @@
   {
     "id": "lucky-cleats",
     "name": "Lucky Cleats",
-    "shape": "shard",
+    "shape": "cleat",
     "position": { "row": 6, "col": 11 },
     "rarity": "common",
     "revealedBy": "bhuvi",
@@ -20,7 +20,7 @@
   {
     "id": "chrome-keychain",
     "name": "Chrome Keychain",
-    "shape": "charm",
+    "shape": "keychain",
     "position": { "row": 6, "col": 15 },
     "rarity": "rare",
     "revealedBy": "vd",

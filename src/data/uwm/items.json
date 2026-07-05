@@ -2,7 +2,7 @@
   {
     "id": "missing-brick",
     "name": "The Missing Brick",
-    "shape": "charm",
+    "shape": "brick",
     "position": { "row": 3, "col": 3 },
     "rarity": "common",
     "revealedBy": "eesha",
@@ -11,7 +11,7 @@
   {
     "id": "lucky-anklet",
     "name": "Lucky Anklet",
-    "shape": "bead",
+    "shape": "anklet",
     "position": { "row": 5, "col": 7 },
     "rarity": "common",
     "revealedBy": "sungat",
@@ -20,7 +20,7 @@
   {
     "id": "game-ball",
     "name": "Game Ball",
-    "shape": "shard",
+    "shape": "ball",
     "position": { "row": 10, "col": 10 },
     "rarity": "common",
     "revealedBy": "rohit",
@@ -29,7 +29,7 @@
   {
     "id": "pocket-watch",
     "name": "Pocket Watch",
-    "shape": "leaf",
+    "shape": "watch",
     "position": { "row": 3, "col": 15 },
     "rarity": "rare",
     "revealedBy": "prakhar",
@@ -38,7 +38,7 @@
   {
     "id": "gold-cufflink",
     "name": "Gold Cufflink",
-    "shape": "charm",
+    "shape": "cufflink",
     "position": { "row": 10, "col": 14 },
     "rarity": "limited",
     "revealedBy": "nithy",
