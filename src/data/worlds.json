@@ -1,0 +1,16 @@
+[
+  {
+    "id": "uwm",
+    "name": "UWM",
+    "tag": "Finance District",
+    "mood": "Suburban meets urban",
+    "desc": "A tidy money town: a columned bank anchors a street of suburban homes, where builders, dancers and traders go about their day."
+  },
+  {
+    "id": "ann-arbor",
+    "name": "Ann Arbor",
+    "tag": "College City",
+    "mood": "Maize & blue campus",
+    "desc": "A bustling university city — a collegiate hall of maize and blue flanked by downtown blocks, full of students to meet and challenge."
+  }
+]

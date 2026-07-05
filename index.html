@@ -241,6 +241,75 @@
       margin-top: var(--space-xs);
     }
 
+    #world-select-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 18, 12, 0.78);
+      padding: var(--space-l);
+    }
+
+    #world-select-overlay[hidden] { display: none; }
+
+    #world-select-card {
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+    }
+
+    #world-select-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      margin: 0 0 var(--space-s);
+    }
+
+    #world-select-card > p {
+      line-height: 1.5;
+      margin: 0 0 var(--space-m);
+    }
+
+    #world-select-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-s);
+    }
+
+    .world-option {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      text-align: left;
+      background: rgba(240, 230, 210, 0.06);
+      border: 2px solid var(--color-gold);
+      border-radius: 6px;
+      padding: var(--space-m);
+      cursor: pointer;
+      color: var(--color-parchment);
+    }
+
+    .world-option-name {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      color: var(--color-gold);
+    }
+
+    .world-option-tag {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #c7bfa8;
+    }
+
+    .world-option-desc {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #c7bfa8;
+    }
+
     #dialogue-name {
       font-family: var(--font-display);
       font-size: 0.9rem;
@@ -323,9 +392,17 @@
           <p>
             Tonight, four travelers arrived by accident, each missing the one thing they need to
             leave. You're the only one who can walk all four paths. Find what they lost, and carry
-            it back to the shrine at the crossroads before the paths close.
+            it back to the lantern at the crossroads before the paths close.
           </p>
           <button id="intro-begin" type="button">Begin the Night</button>
+        </div>
+      </div>
+
+      <div id="world-select-overlay" hidden>
+        <div id="world-select-card" class="panel">
+          <h2>Choose the Next Path</h2>
+          <p>The portal hums, waiting to be pointed somewhere new. Which world should it open to?</p>
+          <div id="world-select-list"></div>
         </div>
       </div>
 

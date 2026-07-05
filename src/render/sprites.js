@@ -287,46 +287,106 @@ export function drawItem(ctx, item) {
   }
 }
 
-const SHRINE_GRID = [
-  "................",
-  "................",
-  ".....GGGG.......",
-  "....GGGGGG......",
-  "...SSSSSSSS.....",
-  "..SSSSSSSSSS....",
-  "..SSSSSSSSSS....",
-  "..SSSSSSSSSS....",
-  "...SSSSSSSS.....",
-  "....SSSSSS......",
-  "................",
+function hexToRgba(hex, alpha) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+const LANTERN_ROWS = [
+  ".GGGG.",
+  ".GllG.",
+  ".GGGG.",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  "..pp..",
+  ".bbbb.",
 ];
 
 // progress: 0..1, how many of the four treasures have been delivered here —
-// the center gem warms from dull stone-gray toward gold and glows brighter
-// as the crossroads nears its ending.
-export function drawShrine(ctx, shrine, progress) {
-  const unit = 40 / 16;
+// the lantern's flame warms from a dim ember to a bright gold glow as the
+// crossroads nears its ending.
+export function drawLantern(ctx, lantern, progress) {
+  const unit = 2.6;
+  const width = 6 * unit;
+  const height = 13 * unit;
+  const ox = lantern.x + (40 - width) / 2;
+  const oy = lantern.y + (40 - height) / 2;
   const pulse = 0.85 + Math.sin(performance.now() / 500) * 0.15;
-  const gemColor = mix("#5f6b66", "#ffe9a8", progress);
+  const flameColor = mix("#6b6b62", "#fff6da", progress);
+  const glowHex = mix("#6b6b62", "#f0deb2", progress);
+  const glowAlpha = 0.15 + progress * 0.45;
+  const glowRadius = 14 + progress * 40 * pulse;
 
-  if (progress > 0) {
-    ctx.save();
-    ctx.shadowColor = gemColor;
-    ctx.shadowBlur = 6 + progress * 14 * pulse;
-  }
+  const cx = ox + 3 * unit;
+  const cy = oy + 2 * unit;
+  const glow = ctx.createRadialGradient(cx, cy, 1, cx, cy, glowRadius);
+  glow.addColorStop(0, hexToRgba(glowHex, glowAlpha));
+  glow.addColorStop(1, hexToRgba(glowHex, 0));
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - glowRadius, cy - glowRadius, glowRadius * 2, glowRadius * 2);
 
-  for (let y = 0; y < SHRINE_GRID.length; y += 1) {
-    const row = SHRINE_GRID[y];
+  for (let y = 0; y < LANTERN_ROWS.length; y += 1) {
+    const row = LANTERN_ROWS[y];
     for (let x = 0; x < row.length; x += 1) {
       const ch = row[x];
       let color = null;
-      if (ch === "S") color = "#5a6a63";
-      else if (ch === "G") color = gemColor;
+      if (ch === "G") color = "#3a3f47";
+      else if (ch === "l") color = flameColor;
+      else if (ch === "p") color = "#2b2f36";
+      else if (ch === "b") color = "#20242a";
       if (!color) continue;
       ctx.fillStyle = color;
-      ctx.fillRect(Math.round(shrine.x + x * unit), Math.round(shrine.y + y * unit), Math.ceil(unit), Math.ceil(unit));
+      ctx.fillRect(Math.round(ox + x * unit), Math.round(oy + y * unit), Math.ceil(unit), Math.ceil(unit));
     }
   }
+}
 
-  if (progress > 0) ctx.restore();
+const portalReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PORTAL_RING_COLORS = ["#d4a24c", "#cfd8e3", "#f0e6d2"];
+
+// The gateway that opens once every treasure has been delivered to the
+// lantern. Rotation is disabled (but the portal still renders, just static)
+// under prefers-reduced-motion.
+export function drawPortal(ctx, portal) {
+  const cx = portal.x + 20;
+  const cy = portal.y + 20;
+  const t = portalReducedMotion ? 0 : performance.now() / 1000;
+  const pulse = portalReducedMotion ? 1 : 0.85 + Math.sin(performance.now() / 400) * 0.15;
+
+  ctx.save();
+  const glow = ctx.createRadialGradient(cx, cy, 2, cx, cy, 26 * pulse);
+  glow.addColorStop(0, "rgba(212, 162, 76, 0.5)");
+  glow.addColorStop(1, "rgba(212, 162, 76, 0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - 30, cy - 30, 60, 60);
+
+  PORTAL_RING_COLORS.forEach((color, i) => {
+    const radius = 8 + i * 5;
+    const spin = portalReducedMotion ? 0 : t * (i % 2 === 0 ? 1 : -1);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(spin + (i * Math.PI) / 3);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  ctx.fillStyle = "#f0e6d2";
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }

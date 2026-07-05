@@ -4,14 +4,17 @@ import { tileTypeAtPixel } from "./game/collision.js";
 import { createPlayer, updatePlayer, playerCenter, setPlayerColor } from "./entities/player.js";
 import { createNpc, findNearestNpc } from "./entities/npc.js";
 import { createItem, findCollectableItemAt, isItemRevealed } from "./entities/item.js";
-import { createShrine, isNearShrine } from "./entities/shrine.js";
+import { createLantern, isNearLantern } from "./entities/lantern.js";
+import { createPortal, isNearPortal } from "./entities/portal.js";
 import { loadSave, writeSave, resetSave } from "./systems/save.js";
 import { openDialogue, closeDialogue, isDialogueOpen } from "./systems/dialogue.js";
 import { showIntro, isIntroOpen } from "./systems/intro.js";
+import { showWorldSelect, closeWorldSelect, isWorldSelectOpen } from "./systems/worldSelect.js";
 import { initInventoryUI } from "./systems/inventory.js";
 import { createEventTracker, checkTileEvents } from "./systems/events.js";
 import { drawTilemap } from "./render/tilemap.js";
-import { drawPlayer, drawNpc, drawItem, drawShrine } from "./render/sprites.js";
+import { drawTroyAtmosphere } from "./render/atmosphere.js";
+import { drawPlayer, drawNpc, drawItem, drawLantern, drawPortal } from "./render/sprites.js";
 import { drawInteractHint, createFxManager } from "./render/ui.js";
 import {
   initAudio,
@@ -27,9 +30,12 @@ import {
 const canvas = document.getElementById("game-canvas");
 const ctx = canvas.getContext("2d");
 
-const SHRINE_IDLE_TEXT = "An old stone altar sits quiet at the crossroads, moss thick in its carvings.";
-const SHRINE_CALM_TEXT =
-  "The shrine is cool and still. The travelers are home. Somewhere, four realms remember a stranger who helped them find their way.";
+const LANTERN_IDLE_TEXT = "An old iron lantern stands at the crossroads, its flame unlit and waiting.";
+const LANTERN_CALM_TEXT =
+  "The lantern burns steady and warm. The travelers are home — and something new glimmers at the crossroads.";
+const EPILOGUE_TEXT =
+  "As the last treasure settles into the lantern's flame, it flares bright gold — and beside it, the air itself begins to fold, a shimmering portal blinking open at the crossroads. Kiri, Sable, Wren, and Mochi each pause to look back at you, one last time, before their night finally comes to an end. Something tells you this crossroads isn't finished with you yet.";
+const PORTAL_LOCKED_PREFIX = "The portal shimmers and settles on a path. Somewhere beyond it,";
 
 async function loadJson(path) {
   const response = await fetch(path);
@@ -37,17 +43,19 @@ async function loadJson(path) {
 }
 
 async function boot() {
-  const [map, npcsData, itemsData, customization] = await Promise.all([
+  const [map, npcsData, itemsData, customization, worlds] = await Promise.all([
     loadJson("/src/data/map.json"),
     loadJson("/src/data/npcs.json"),
     loadJson("/src/data/items.json"),
     loadJson("/src/data/customization.json"),
+    loadJson("/src/data/worlds.json"),
   ]);
 
   const npcs = npcsData.map(createNpc);
   const items = itemsData.map(createItem);
   const save = loadSave(customization);
-  const shrine = createShrine({ row: 5, col: 9 });
+  const lantern = createLantern({ row: 5, col: 9 });
+  const portal = createPortal({ row: 4, col: 9 });
 
   const player = createPlayer({ row: 6, col: 9, color: save.playerColor });
   const eventTracker = createEventTracker();
@@ -122,7 +130,7 @@ async function boot() {
     return npc.dialogue.intro;
   }
 
-  function handleShrineInteract() {
+  function handleLanternInteract() {
     const undelivered = save.foundItemIds.filter((id) => !isDelivered(id));
 
     if (undelivered.length > 0) {
@@ -130,34 +138,55 @@ async function boot() {
       save.deliveredItemIds.push(...undelivered);
       writeSave(save);
       inventoryUI.render(save);
-      fx.trigger("sparkle", shrine.x + 20, shrine.y + 10);
+      fx.trigger("sparkle", lantern.x + 20, lantern.y + 10);
 
       if (save.deliveredItemIds.length === items.length) {
         save.epilogueSeen = true;
         writeSave(save);
         playCelebrationFanfare();
-        [-24, -8, 8, 24].forEach((dx) => fx.trigger("confetti", shrine.x + 20 + dx, shrine.y));
-        openDialogue(
-          "The Crossroads",
-          "As the last treasure settles onto the stone, the crossroads shudders — four paths of light bloom outward, one to each realm. Kiri, Sable, Wren, and Mochi each pause at their threshold to look back at you before stepping through. The night grows quiet again. You may have found something too, in all this wandering."
-        );
+        [-24, -8, 8, 24].forEach((dx) => fx.trigger("confetti", lantern.x + 20 + dx, lantern.y));
+        fx.trigger("sparkle", portal.x + 20, portal.y + 20);
+        openDialogue("The Crossroads", EPILOGUE_TEXT);
       } else {
         playPickupChime();
-        openDialogue("The Shrine", `You lay the ${names.join(" and ")} upon the stone. It glows a little brighter.`);
+        openDialogue("The Lantern", `You feed the ${names.join(" and ")} to the flame. It burns a little brighter.`);
       }
       return;
     }
 
     if (save.epilogueSeen) {
-      openDialogue("The Shrine", SHRINE_CALM_TEXT);
+      openDialogue("The Lantern", LANTERN_CALM_TEXT);
     } else if (save.deliveredItemIds.length > 0) {
       openDialogue(
-        "The Shrine",
-        `The shrine hums faintly. ${save.deliveredItemIds.length} of ${items.length} travelers are on their way home.`
+        "The Lantern",
+        `The lantern's flame flickers gently. ${save.deliveredItemIds.length} of ${items.length} travelers are on their way home.`
       );
     } else {
-      openDialogue("The Shrine", SHRINE_IDLE_TEXT);
+      openDialogue("The Lantern", LANTERN_IDLE_TEXT);
     }
+  }
+
+  function handlePortalInteract() {
+    if (save.unlockedWorld) {
+      const world = worlds.find((w) => w.id === save.unlockedWorld);
+      openDialogue(
+        "The Portal",
+        `${PORTAL_LOCKED_PREFIX} ${world.name} awaits — though the way there is still being built. Come back soon.`
+      );
+      return;
+    }
+
+    showWorldSelect(worlds, (worldId) => {
+      save.unlockedWorld = worldId;
+      writeSave(save);
+      const world = worlds.find((w) => w.id === worldId);
+      fx.trigger("sparkle", portal.x + 20, portal.y + 20);
+      playPickupChime();
+      openDialogue(
+        "The Portal",
+        `${PORTAL_LOCKED_PREFIX} ${world.name} awaits — though the way there is still being built. Come back soon.`
+      );
+    });
   }
 
   function handleInteract() {
@@ -187,18 +216,23 @@ async function boot() {
       inventoryUI.render(save);
       fx.trigger("sparkle", collectable.x + 20, collectable.y + 20);
       playPickupChime();
-      openDialogue("Found!", `You found the ${collectable.name}. Carry it back to the shrine at the crossroads.`);
+      openDialogue("Found!", `You found the ${collectable.name}. Carry it back to the lantern at the crossroads.`);
       return;
     }
 
-    if (isNearShrine(shrine, center)) {
-      handleShrineInteract();
+    if (isNearLantern(lantern, center)) {
+      handleLanternInteract();
+      return;
+    }
+
+    if (save.epilogueSeen && isNearPortal(portal, center)) {
+      handlePortalInteract();
     }
   }
 
   function update(dt) {
     const input = getInputState();
-    const paused = isDialogueOpen() || isIntroOpen();
+    const paused = isDialogueOpen() || isIntroOpen() || isWorldSelectOpen();
 
     if (!paused) {
       updatePlayer(player, dt, input, map);
@@ -245,14 +279,19 @@ async function boot() {
     if (nearestNpc) return nearestNpc;
     const item = findCollectableItemAt(items, center, foundIdSet(), talkedIdSet());
     if (item) return item;
-    if (isNearShrine(shrine, center)) return shrine;
+    if (isNearLantern(lantern, center)) return lantern;
+    if (save.epilogueSeen && isNearPortal(portal, center)) return portal;
     return null;
   }
 
   function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawTilemap(ctx, map);
-    drawShrine(ctx, shrine, save.deliveredItemIds.length / items.length);
+    drawTroyAtmosphere(ctx, canvas.width, canvas.height);
+    drawLantern(ctx, lantern, save.deliveredItemIds.length / items.length);
+    if (save.epilogueSeen) {
+      drawPortal(ctx, portal);
+    }
 
     const found = foundIdSet();
     const talked = talkedIdSet();

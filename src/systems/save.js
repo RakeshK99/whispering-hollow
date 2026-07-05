@@ -9,6 +9,7 @@ function defaultSave(customizationData, muted = false, hasSeenIntro = false) {
     muted,
     hasSeenIntro,
     epilogueSeen: false,
+    unlockedWorld: null,
   };
 }
 
@@ -36,6 +37,7 @@ export function loadSave(customizationData) {
       // Any pre-existing save means this isn't this player's first time here.
       hasSeenIntro: parsed.hasSeenIntro !== undefined ? Boolean(parsed.hasSeenIntro) : true,
       epilogueSeen: Boolean(parsed.epilogueSeen),
+      unlockedWorld: parsed.unlockedWorld || null,
     };
   } catch {
     return defaultSave(customizationData);

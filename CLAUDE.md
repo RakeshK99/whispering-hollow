@@ -27,6 +27,38 @@ Each item also has a `shape` field (`charm`/`shard`/`leaf`/`bead`, defined in
 sharing one generic treasure-chest icon — keep this in mind when adding new
 items: give each a matching shape, don't default them all to `treasure`.
 
+## Multi-World Structure
+
+The world the player starts in is **Troy** — a moonlit graveyard crossroads,
+reskinned from an earlier lush-grove look per a second design pass, project
+**"Copy of Whispering Hollow Visual Brief"** (project ID
+`871fff35-1062-4627-9b71-3b88b201c323`, same file name, same `DesignSync` flow).
+That atlas also defines two more worlds — **UWM** (finance district, 5
+characters) and **Ann Arbor** (college city, 3 characters) — plus a battle-
+encounter panel for "challenging" those characters. Only the portal/world-select
+*framework* is built so far; UWM and Ann Arbor are data-only stubs in
+`src/data/worlds.json` with no playable map yet, and the battle mechanic
+(agreed: a quick lighthearted stat/luck mini-game, not a full turn-based RPG)
+isn't built at all. Don't assume either exists beyond the stub dialogue.
+
+Troy's tile textures are still named `grassA`/`grassB`/`path`/`tree`/`water`/
+`pond`/`flower`/`stump` in `map.json` — only the colors changed in
+`tilemap.js` (dark grass, dirt path, bare dead trees, inky water). The
+decorative moon/lamp/grave/fog layer lives in `src/render/atmosphere.js`,
+drawn after the tilemap but before characters so sprites stay full-brightness
+against the dimmed night tint.
+
+The item-delivery loop is unchanged in mechanics — find 4 items from the 4
+NPCs, carry them, deliver them — just reskinned: the delivery object is now
+the **lantern** (`entities/lantern.js`, `drawLantern` in `sprites.js`, brightens
+per delivery) instead of a stone shrine. Delivering the 4th item sets
+`save.epilogueSeen`, which is what makes the **portal** (`entities/portal.js`,
+`drawPortal`) appear and become interactable just north of the lantern.
+Interacting with the portal opens the world-select overlay
+(`systems/worldSelect.js`) once; the chosen world is locked into
+`save.unlockedWorld` permanently (no re-picking) and shown as "coming soon"
+on future portal interactions until that world is actually built.
+
 ## Audio
 
 SFX are synthesized at runtime via the Web Audio API in `src/systems/audio.js` —
@@ -50,10 +82,12 @@ whispering-hollow/
 ├── src/
 │   ├── main.js                 # boot: load assets → init game → start loop
 │   ├── game/                   # loop.js, input.js, collision.js, camera.js
-│   ├── entities/                # player.js, npc.js, item.js
-│   ├── systems/                 # dialogue.js, inventory.js, events.js, save.js
-│   ├── render/                  # tilemap.js, sprites.js, ui.js
-│   └── data/                     # map.json, npcs.json, items.json, customization.json
+│   ├── entities/                # player.js, npc.js, item.js, lantern.js, portal.js
+│   ├── systems/                 # dialogue.js, intro.js, worldSelect.js, inventory.js,
+│   │                             # events.js, save.js, audio.js
+│   ├── render/                  # tilemap.js, sprites.js, ui.js, icons.js, atmosphere.js
+│   └── data/                     # map.json, npcs.json, items.json, customization.json,
+│                                    # worlds.json
 ├── public/assets/
 │   ├── sprites/  tiles/  fx/  ui/
 └── README.md

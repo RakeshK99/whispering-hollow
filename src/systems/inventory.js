@@ -80,7 +80,7 @@ function renderQuestLog(npcs, items, save) {
     } else if (found) {
       const accent = RARITY_ACCENT[linkedItem.rarity] || RARITY_ACCENT.common;
       questLogList.appendChild(
-        iconRow(linkedItem.shape, accent, `${npc.name}: found the ${linkedItem.name} — return it to the shrine!`)
+        iconRow(linkedItem.shape, accent, `${npc.name}: found the ${linkedItem.name} — return it to the lantern!`)
       );
     } else {
       questLogList.appendChild(iconRow("scroll", "#d4a24c", `${npc.name}: "${npc.dialogue.intro}"`));
@@ -105,7 +105,7 @@ function renderInventoryList(items, save) {
 
   delivered.forEach((item) => {
     const accent = RARITY_ACCENT[item.rarity] || RARITY_ACCENT.common;
-    inventoryList.appendChild(iconRow(item.shape, accent, `${item.name} — delivered to the shrine`));
+    inventoryList.appendChild(iconRow(item.shape, accent, `${item.name} — delivered to the lantern`));
   });
 }
 
