@@ -1,0 +1,62 @@
+[
+  {
+    "id": "sportsplex",
+    "name": "UWM Sports Complex",
+    "npc": "rohit",
+    "hostName": "Rohit",
+    "door": { "row": 6, "col": 4 },
+    "quest": "\"Lost my game ball, lost my rhythm — but give me a spotter on the free throws and I'll find it again fast. Sink enough and I'm unstoppable out there. Let's go!\"",
+    "mini": "Free-Throw Frenzy",
+    "game": "timing",
+    "gameConfig": { "rounds": 5, "periodMs": 1000, "zoneWidth": 0.2 },
+    "floor": "court",
+    "wall": "#cdd6dc",
+    "accent": "#4a90d9",
+    "art": ["#4a90d9", "#e08a4a", "#cdd6dc", "#e0c14a"]
+  },
+  {
+    "id": "rudys",
+    "name": "Rudy's Cafe",
+    "npc": "sungat",
+    "hostName": "Sungat",
+    "door": { "row": 6, "col": 18 },
+    "quest": "\"I've taken over the espresso machine and I'm pouring latte art to my own beat — the bells on my anklet keeping time, just like on the dance floor. Catch the rhythm with me before the foam falls flat!\"",
+    "mini": "Latte Beat",
+    "game": "rhythm",
+    "gameConfig": { "beatCount": 6, "spawnMs": 650, "travelMs": 1300 },
+    "floor": "wood",
+    "wall": "#d8c8a8",
+    "accent": "#8a5a2a",
+    "art": ["#8a5a2a", "#efe2c4", "#a86b3c", "#3f7350"]
+  },
+  {
+    "id": "uwmnorth",
+    "name": "UWM North · IT",
+    "npc": "nithy",
+    "hostName": "Nithy",
+    "door": { "row": 9, "col": 3 },
+    "quest": "\"The servers picked the worst possible morning to act up — right before a call with my biggest client. I need someone sharp to call out the right light before I lose the deal. I don't have all day.\"",
+    "mini": "Quick Call",
+    "game": "match",
+    "gameConfig": { "rounds": 5, "roundMs": 1300 },
+    "floor": "carpetB",
+    "wall": "#bcc6d0",
+    "accent": "#3a5a8a",
+    "art": ["#4a90d9", "#173a2a", "#3a5a8a", "#7ac97a"]
+  },
+  {
+    "id": "uwmsouth",
+    "name": "UWM South · Sales",
+    "npc": "prakhar",
+    "hostName": "Prakhar",
+    "door": { "row": 9, "col": 17 },
+    "quest": "\"A good manager keeps time, and a good lead is just a case that hasn't been solved yet. Trace it with me, in the right order, and we'll close this right on schedule. My horse is patient. I am less so.\"",
+    "mini": "Trace the Lead",
+    "game": "memory",
+    "gameConfig": { "sequenceLength": 5 },
+    "floor": "carpetG",
+    "wall": "#c8d0c0",
+    "accent": "#4a7a4a",
+    "art": ["#4a7a4a", "#e8e4da", "#c23a3a", "#e0c14a"]
+  }
+]

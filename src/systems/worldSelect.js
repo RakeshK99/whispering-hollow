@@ -19,9 +19,11 @@ export function showWorldSelect(worlds, onChoose) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "world-option";
+    const statusLabel = world.locked ? "Unexplored path" : "Walk back";
     button.innerHTML = `
       <span class="world-option-name">${world.name}</span>
       <span class="world-option-tag">${world.tag} · ${world.mood}</span>
+      <span class="world-option-status">${statusLabel}</span>
       <span class="world-option-desc">${world.desc}</span>
     `;
     button.addEventListener("click", () => {

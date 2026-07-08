@@ -1,6 +1,11 @@
 const STORAGE_KEY = "whispering-hollow-save";
 const WORLD_IDS = ["troy", "uwm", "ann-arbor"];
 
+function sanitizeTrinkets(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((t) => t && typeof t === "object" && typeof t.id === "string");
+}
+
 function defaultWorldState() {
   return {
     talkedNpcIds: [],
@@ -22,6 +27,11 @@ function defaultSave(customizationData, muted = false) {
     currentWorld: "troy",
     unlockedWorlds: ["troy"],
     worlds,
+    // Meta-progression: a trinket is earned the first time a building's
+    // mini-game is won (one per building id, 11 max); xp comes from that
+    // plus battle wins and drives the Explorer level shown in the sidebar.
+    trinkets: [],
+    xp: 0,
   };
 }
 
@@ -55,6 +65,8 @@ export function loadSave(customizationData) {
           ? parsed.unlockedWorlds.filter((id) => WORLD_IDS.includes(id))
           : ["troy"],
         worlds,
+        trinkets: sanitizeTrinkets(parsed.trinkets),
+        xp: Number.isFinite(parsed.xp) ? parsed.xp : 0,
       };
     }
 
@@ -82,6 +94,8 @@ export function loadSave(customizationData) {
       currentWorld: "troy",
       unlockedWorlds,
       worlds,
+      trinkets: [],
+      xp: 0,
     };
   } catch {
     return defaultSave(customizationData);

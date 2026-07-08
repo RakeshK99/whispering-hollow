@@ -9,7 +9,8 @@
       "thanks": "That's the one! You have no idea how long I've been staring at an unfinished wall because of this. Seriously, thank you.",
       "farewell": "Go on, get back to your crossroads. And hey — thanks for not leaving my build half-finished."
     },
-    "linkedItemId": "missing-brick"
+    "linkedItemId": "missing-brick",
+    "battleLevel": 14
   },
   {
     "id": "sungat",
@@ -21,7 +22,8 @@
       "thanks": "Yes! Now THIS is a proper bhangra! Thank you, truly — you've got great timing, you know that?",
       "farewell": "Dance well wherever you go next, friend. You've earned a spot in my next routine."
     },
-    "linkedItemId": "lucky-anklet"
+    "linkedItemId": "lucky-anklet",
+    "battleLevel": 16
   },
   {
     "id": "rohit",
@@ -33,7 +35,8 @@
       "thanks": "My ball! Let's go! I owe you one — actually, I owe you a lot more than one.",
       "farewell": "Catch you on the other side, champ. Keep that same energy."
     },
-    "linkedItemId": "game-ball"
+    "linkedItemId": "game-ball",
+    "battleLevel": 18
   },
   {
     "id": "prakhar",
@@ -45,7 +48,8 @@
       "thanks": "Ah, excellent — right on schedule. My thanks to you, truly. A good deed, well timed.",
       "farewell": "Until our paths cross again. Keep good time out there."
     },
-    "linkedItemId": "pocket-watch"
+    "linkedItemId": "pocket-watch",
+    "battleLevel": 22
   },
   {
     "id": "nithy",
@@ -57,6 +61,7 @@
       "thanks": "There it is. Sharp as ever. I don't forget favors — you've got one coming, whenever you need it.",
       "farewell": "Pleasure doing business, friend. Don't be a stranger."
     },
-    "linkedItemId": "gold-cufflink"
+    "linkedItemId": "gold-cufflink",
+    "battleLevel": 20
   }
 ]

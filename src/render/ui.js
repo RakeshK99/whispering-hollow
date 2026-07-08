@@ -35,6 +35,28 @@ export function drawInteractHint(ctx, target) {
   ctx.fillText("!", x, y + 1);
 }
 
+// A small red "B" badge above battle-eligible NPCs, shown alongside the
+// regular talk hint so it's clear this NPC can also be challenged.
+export function drawChallengeHint(ctx, target) {
+  if (!target) return;
+  const x = target.x + 20;
+  const y = target.y - 24;
+
+  ctx.fillStyle = "#d95b5b";
+  ctx.strokeStyle = "#2b2018";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(x, y, 9, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#f0e6d2";
+  ctx.font = "bold 10px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("B", x, y + 1);
+}
+
 function drawSparkle(ctx, cx, cy, t) {
   const size = 64;
   const ox = cx - size / 2;

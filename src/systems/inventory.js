@@ -67,6 +67,9 @@ function iconRow(iconKind, accent, text) {
 function renderQuestLog(npcs, items, save) {
   questLogList.innerHTML = "";
   npcs.forEach((npc) => {
+    // Flavor-only NPCs (building hosts) aren't part of the fetch-quest loop.
+    if (!npc.linkedItemId) return;
+
     const talked = save.talkedNpcIds.includes(npc.id);
     const linkedItem = items.find((item) => item.id === npc.linkedItemId);
     const delivered = linkedItem && save.deliveredItemIds.includes(linkedItem.id);
@@ -93,9 +96,8 @@ function renderInventoryList(items, save) {
   const carried = items.filter((item) => save.foundItemIds.includes(item.id) && !save.deliveredItemIds.includes(item.id));
   const delivered = items.filter((item) => save.deliveredItemIds.includes(item.id));
 
-  if (carried.length === 0 && delivered.length === 0) {
+  if (carried.length === 0 && delivered.length === 0 && save.trinkets.length === 0) {
     inventoryList.appendChild(iconRow("bag", "#d4a24c", "No items collected yet."));
-    return;
   }
 
   carried.forEach((item) => {
@@ -106,6 +108,10 @@ function renderInventoryList(items, save) {
   delivered.forEach((item) => {
     const accent = RARITY_ACCENT[item.rarity] || RARITY_ACCENT.common;
     inventoryList.appendChild(iconRow(item.shape, accent, `${item.name} — delivered to the lantern`));
+  });
+
+  save.trinkets.forEach((trinket) => {
+    inventoryList.appendChild(iconRow("star", trinket.accent, `${trinket.name} trinket — won`));
   });
 }
 

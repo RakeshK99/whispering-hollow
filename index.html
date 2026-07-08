@@ -94,6 +94,61 @@
       margin: 0 0 var(--space-s);
     }
 
+    #progression {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-s);
+    }
+
+    #sidebar-level-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-s);
+      flex-wrap: wrap;
+    }
+
+    #sidebar-level {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      color: var(--color-gold);
+    }
+
+    #sidebar-charms {
+      font-size: 0.7rem;
+      color: #5a4c38;
+    }
+
+    #sidebar-xp-track {
+      height: 8px;
+      border: 2px solid var(--color-ink);
+      border-radius: 4px;
+      background: rgba(43, 32, 24, 0.15);
+      overflow: hidden;
+    }
+
+    #sidebar-xp-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--color-gold);
+      transition: width 0.3s ease;
+    }
+
+    .charm-btn {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      padding: var(--space-s);
+      border: 2px solid var(--color-ink);
+      border-radius: 6px;
+      background: #c264c9;
+      color: var(--color-parchment);
+      cursor: pointer;
+      box-shadow: 0 3px 0 #954a9c;
+    }
+
+    .charm-btn[disabled] { opacity: 0.5; cursor: default; }
+
     .tabs {
       display: flex;
       gap: var(--space-xs);
@@ -304,6 +359,14 @@
       color: #c7bfa8;
     }
 
+    .world-option-status {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-gold);
+    }
+
     .world-option-desc {
       font-size: 0.85rem;
       line-height: 1.4;
@@ -318,6 +381,139 @@
 
     #dialogue-text {
       margin: 0;
+    }
+
+    #building-overlay,
+    #battle-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 18, 12, 0.78);
+      padding: var(--space-l);
+    }
+
+    #building-overlay[hidden],
+    #battle-overlay[hidden] { display: none; }
+
+    #building-card,
+    #battle-card {
+      max-width: 620px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-m);
+    }
+
+    #building-canvas,
+    #battle-canvas {
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      border: 2px solid var(--color-ink);
+      border-radius: 4px;
+      display: block;
+    }
+
+    #building-title-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-s);
+      flex-wrap: wrap;
+    }
+
+    #building-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+    }
+
+    #building-world-tag {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #9a6b2e;
+    }
+
+    #building-host {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #9a6b2e;
+    }
+
+    #building-quest {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    #building-mini-row {
+      background: #1b3020;
+      border-radius: 6px;
+      padding: var(--space-m) var(--space-l);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #building-mini-row .mini-label {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      color: #8fa08c;
+    }
+
+    #building-mini-name {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: var(--color-parchment);
+      margin-top: var(--space-xs);
+    }
+
+    #building-actions,
+    #battle-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-m);
+    }
+
+    .action-btn {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      padding: var(--space-m) var(--space-xs);
+      border: 2px solid var(--color-ink);
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: normal;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    #building-talk, #battle-bag { background: #d4a24c; color: var(--color-ink); box-shadow: 0 4px 0 #a97e34; }
+    #building-play { background: #7ac97a; color: var(--color-ink); box-shadow: 0 4px 0 #5aa35a; }
+    #building-leave {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      padding: var(--space-s) var(--space-xl);
+      border: 2px solid var(--color-ink);
+      border-radius: 6px;
+      background: var(--color-ink);
+      color: var(--color-parchment);
+      cursor: pointer;
+      align-self: center;
+    }
+
+    #battle-fight { background: #d95b5b; color: var(--color-parchment); box-shadow: 0 4px 0 #a83f3f; }
+    #battle-switch { background: #4a90d9; color: var(--color-parchment); box-shadow: 0 4px 0 #356aa3; }
+    #battle-run { background: #e7d9bd; color: var(--color-ink); box-shadow: 0 4px 0 #c3b191; }
+
+    .action-btn[disabled] { opacity: 0.5; cursor: default; }
+
+    #battle-message {
+      min-height: 1.4em;
+      margin: 0;
+      line-height: 1.4;
     }
 
     #touch-controls {
@@ -367,6 +563,20 @@
       pointer-events: auto;
     }
 
+    #challenge-button {
+      position: absolute;
+      right: calc(var(--space-l) + 76px);
+      bottom: calc(var(--space-l) + 12px);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #d95b5b;
+      color: var(--color-parchment);
+      border: 2px solid var(--color-ink);
+      font-weight: 700;
+      pointer-events: auto;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
     }
@@ -392,9 +602,48 @@
 
       <div id="world-select-overlay" hidden>
         <div id="world-select-card" class="panel">
-          <h2>Choose the Next Path</h2>
-          <p>The portal hums, waiting to be pointed somewhere new. Which world should it open to?</p>
+          <h2>Choose a Path</h2>
+          <p>The portal hums, ready to open onto a world you haven't seen yet — or lead you back to one you have.</p>
           <div id="world-select-list"></div>
+        </div>
+      </div>
+
+      <div id="building-overlay" hidden>
+        <div id="building-card" class="panel">
+          <canvas id="building-canvas" width="560" height="320"></canvas>
+          <div id="building-title-row">
+            <span id="building-name"></span>
+            <span id="building-world-tag"></span>
+          </div>
+          <div id="building-host"></div>
+          <p id="building-quest"></p>
+          <div id="building-mini-row">
+            <div>
+              <div class="mini-label">MINI-GAME</div>
+              <div id="building-mini-name"></div>
+            </div>
+            <span aria-hidden="true" style="font-family: var(--font-display); font-size: 1.2rem; color: var(--color-gold);">★</span>
+          </div>
+          <div id="building-actions">
+            <button id="building-talk" type="button" class="action-btn">TALK</button>
+            <button id="building-play" type="button" class="action-btn">PLAY</button>
+          </div>
+          <button id="building-charm" type="button" class="charm-btn" hidden>USE CHARM</button>
+          <button id="building-leave" type="button">LEAVE</button>
+        </div>
+      </div>
+
+      <div id="battle-overlay" hidden>
+        <div id="battle-card" class="panel">
+          <canvas id="battle-canvas" width="540" height="300"></canvas>
+          <p id="battle-message"></p>
+          <div id="battle-actions">
+            <button id="battle-fight" type="button" class="action-btn">FIGHT</button>
+            <button id="battle-bag" type="button" class="action-btn">BAG</button>
+            <button id="battle-switch" type="button" class="action-btn">SWITCH</button>
+            <button id="battle-run" type="button" class="action-btn">RUN</button>
+          </div>
+          <button id="battle-charm" type="button" class="charm-btn" hidden>USE CHARM</button>
         </div>
       </div>
 
@@ -405,12 +654,23 @@
           <button id="dpad-right" type="button" aria-label="Move right">▶</button>
           <button id="dpad-down" type="button" aria-label="Move down">▼</button>
         </div>
+        <button id="challenge-button" type="button" aria-label="Challenge">vs</button>
         <button id="interact-button" type="button" aria-label="Interact">talk</button>
       </div>
     </div>
 
     <aside id="sidebar" class="panel">
       <h1>Whispering Hollow</h1>
+
+      <div id="progression">
+        <div id="sidebar-level-row">
+          <span id="sidebar-level">Explorer · Lv 1</span>
+          <span id="sidebar-charms">0 charms · 0/11 trinkets</span>
+        </div>
+        <div id="sidebar-xp-track">
+          <div id="sidebar-xp-fill"></div>
+        </div>
+      </div>
 
       <div class="tabs" role="tablist">
         <button id="tab-quest" class="tab-button" role="tab" aria-selected="true" aria-controls="panel-quest">Quest Log</button>

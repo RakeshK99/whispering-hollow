@@ -405,6 +405,23 @@ const NPC_SPRITES = {
     map: { ".": null, C: "#c9cdd3", g: "#243040", o: "#e6e8ea", L: "#f4f0d8", R: "#c23a3a", a: "#111111", W: "#161616", H: "#d0d3d8" },
   },
   vd: { combo: [{ key: "vedantP", dx: 0, dy: 0 }, { key: "car", dx: 13, dy: 4 }], width: 28 },
+  // Coratti's Gelato host — built from the same base body as the player
+  // (white apron over a dark uniform), same construction the atlas uses for
+  // any "generic folk" character.
+  martine: {
+    rows: PLAYER_ROWS.down,
+    map: {
+      ".": null,
+      h: "#2b2018",
+      s: "#d9a878",
+      d: shade("#d9a878", 0.86),
+      X: "#2b1c14",
+      t: "#f0e6d2",
+      T: shade("#f0e6d2", 0.74),
+      p: "#2b2018",
+      b: "#2b2018",
+    },
+  },
 };
 
 function drawPixelGrid(ctx, rows, colorMap, ox, oy, u, { tunic, phase, dir } = {}) {
@@ -439,6 +456,12 @@ export function drawPlayer(ctx, player) {
     phase: player.animPhase,
     dir: player.facing,
   });
+}
+
+// Draws the player at an arbitrary position/scale/facing — for scenes not
+// tied to a grid-positioned player entity, like the battle panel's back view.
+export function drawPlayerAt(ctx, facing, ox, oy, unit, tunicColor) {
+  drawPixelGrid(ctx, PLAYER_ROWS[facing], PLAYER_MAP, ox, oy, unit, { tunic: tunicColor, phase: 0, dir: facing });
 }
 
 function hashSeed(str) {
@@ -485,6 +508,28 @@ export function drawNpc(ctx, npc) {
   }
 
   drawPixelGrid(ctx, sprite.rows, sprite.map, x, y, SPRITE_UNIT);
+}
+
+// Draws any NPC_SPRITES entry (including combo characters like Prakhar+horse
+// or Vedant+car) at an arbitrary position/scale, for scenes that aren't tied
+// to a grid-positioned npc entity — building interiors, the battle panel.
+export function drawCharacterSprite(ctx, key, ox, oy, unit) {
+  const sprite = NPC_SPRITES[key];
+  if (!sprite) return;
+
+  if (sprite.combo) {
+    sprite.combo.forEach((part) => {
+      drawCharacterSprite(ctx, part.key, ox + (part.dx || 0) * unit, oy + (part.dy || 0) * unit, unit);
+    });
+    return;
+  }
+
+  drawPixelGrid(ctx, sprite.rows, sprite.map, ox, oy, unit);
+}
+
+export function characterWidth(key) {
+  const sprite = NPC_SPRITES[key];
+  return sprite && sprite.width ? sprite.width : 16;
 }
 
 const RARITY_ACCENT = {

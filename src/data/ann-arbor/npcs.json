@@ -9,7 +9,8 @@
       "thanks": "YES. Okay, back in the game — literally. Thank you, seriously.",
       "farewell": "GG. Go show the crossroads what you're made of."
     },
-    "linkedItemId": "controller-grip"
+    "linkedItemId": "controller-grip",
+    "battleLevel": 15
   },
   {
     "id": "bhuvi",
@@ -21,7 +22,8 @@
       "thanks": "There they are! Back in form already. Appreciate you, truly.",
       "farewell": "See you on the pitch someday. Thanks for the assist."
     },
-    "linkedItemId": "lucky-cleats"
+    "linkedItemId": "lucky-cleats",
+    "battleLevel": 17
   },
   {
     "id": "vd",
@@ -33,6 +35,15 @@
       "thanks": "There it is. Appreciate it — that one actually means a lot to me.",
       "farewell": "Drive safe out there, wherever the crossroads takes you next."
     },
-    "linkedItemId": "chrome-keychain"
+    "linkedItemId": "chrome-keychain",
+    "battleLevel": 25
+  },
+  {
+    "id": "martine",
+    "name": "Màrtine",
+    "position": { "row": 3, "col": 17 },
+    "dialogue": {
+      "flavor": "Welcome to Coratti's! Every flavor's fresh today — go on in, I'll be right behind the counter."
+    }
   }
 ]

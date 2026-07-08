@@ -8,6 +8,7 @@ export function createNpc(data) {
     sprite: data.sprite,
     dialogue: data.dialogue,
     linkedItemId: data.linkedItemId,
+    battleLevel: data.battleLevel,
     row: data.position.row,
     col: data.position.col,
     x: data.position.col * TILE_SIZE,

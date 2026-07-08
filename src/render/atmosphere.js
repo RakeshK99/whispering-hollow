@@ -81,9 +81,10 @@ const LAMPS = [
 ];
 
 const GRAVES = [
-  { x: 90, y: 500, unit: 4 },
+  { x: 550, y: 540, unit: 4 },
   { x: 460, y: 90, unit: 4 },
   { x: 230, y: 520, unit: 4 },
+  { x: 720, y: 400, unit: 4 },
 ];
 
 const FOG_PATCHES = [

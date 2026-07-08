@@ -4,6 +4,7 @@ const KEY_BINDINGS = {
   left: ["ArrowLeft", "KeyA"],
   right: ["ArrowRight", "KeyD"],
   interact: ["Space", "Enter", "KeyE"],
+  challenge: ["KeyB"],
 };
 
 const state = {
@@ -12,9 +13,11 @@ const state = {
   left: false,
   right: false,
   interact: false,
+  challenge: false,
 };
 
 let interactPressedThisFrame = false;
+let challengePressedThisFrame = false;
 
 function directionForKey(code) {
   for (const [direction, codes] of Object.entries(KEY_BINDINGS)) {
@@ -30,15 +33,29 @@ function setDirection(direction, isActive) {
     state.interact = isActive;
     return;
   }
+  if (direction === "challenge") {
+    if (isActive && !state.challenge) challengePressedThisFrame = true;
+    state.challenge = isActive;
+    return;
+  }
   state[direction] = isActive;
 }
 
 function bindKeyboard() {
   window.addEventListener("keydown", (event) => {
-    setDirection(directionForKey(event.code), true);
+    const direction = directionForKey(event.code);
+    if (!direction) return;
+    // Space/Arrow keys default to scrolling the page — with no preventDefault
+    // that scroll can fire on every key repeat while playing, which is
+    // especially disruptive for the interact-key-driven mini-games.
+    event.preventDefault();
+    setDirection(direction, true);
   });
   window.addEventListener("keyup", (event) => {
-    setDirection(directionForKey(event.code), false);
+    const direction = directionForKey(event.code);
+    if (!direction) return;
+    event.preventDefault();
+    setDirection(direction, false);
   });
 }
 
@@ -70,6 +87,7 @@ function bindTouchControls() {
   bindTouchButton("dpad-left", "left");
   bindTouchButton("dpad-right", "right");
   bindTouchButton("interact-button", "interact");
+  bindTouchButton("challenge-button", "challenge");
 }
 
 function detectTouch() {
@@ -91,5 +109,11 @@ export function getInputState() {
 export function consumeInteractPressed() {
   const pressed = interactPressedThisFrame;
   interactPressedThisFrame = false;
+  return pressed;
+}
+
+export function consumeChallengePressed() {
+  const pressed = challengePressedThisFrame;
+  challengePressedThisFrame = false;
   return pressed;
 }

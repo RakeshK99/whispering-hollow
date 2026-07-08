@@ -1,0 +1,47 @@
+[
+  {
+    "id": "zwest",
+    "name": "Z West Apartments",
+    "npc": "vish",
+    "hostName": "Vish",
+    "door": { "row": 5, "col": 2 },
+    "quest": "\"One clutch play from ranking up, headset on, thumbs ready. Just need someone to help me land the shot before the round timer runs out. No pressure. Okay, some pressure.\"",
+    "mini": "Clutch Shot",
+    "game": "timing",
+    "gameConfig": { "rounds": 5, "periodMs": 900, "zoneWidth": 0.18 },
+    "floor": "wood",
+    "wall": "#e2d2ac",
+    "accent": "#c23a3a",
+    "art": ["#c23a3a", "#4a90d9", "#e0c14a", "#7ac97a"]
+  },
+  {
+    "id": "corattis",
+    "name": "Coratti's Gelato",
+    "npc": "martine",
+    "hostName": "Màrtine",
+    "door": { "row": 5, "col": 17 },
+    "quest": "\"The case is packed and the line's not getting any shorter — every flavor's fresh today, but I need a second pair of hands to scoop it out in time. Keep the beat with me and nothing melts.\"",
+    "mini": "Gelato Scoop",
+    "game": "rhythm",
+    "gameConfig": { "beatCount": 6, "spawnMs": 750, "travelMs": 1500 },
+    "floor": "tileItal",
+    "wall": "#e6d0a8",
+    "accent": "#c23a3a",
+    "art": ["#4f8a60", "#efe2c4", "#c23a3a", "#e0c14a"]
+  },
+  {
+    "id": "shapiro",
+    "name": "Shapiro Library",
+    "npc": "bhuvi",
+    "hostName": "Bhuvi",
+    "door": { "row": 8, "col": 13 },
+    "quest": "\"Finals week chaos hit the stacks and I'm treating it like a match — reshelve the scattered books by color before I lose the sprint. Keep up, this is basically a scrimmage.\"",
+    "mini": "Book Sprint",
+    "game": "match",
+    "gameConfig": { "rounds": 5, "roundMs": 1300 },
+    "floor": "carpetM",
+    "wall": "#d8cbb0",
+    "accent": "#274a56",
+    "art": ["#c23a3a", "#4a90d9", "#7ac97a", "#e0c14a"]
+  }
+]
